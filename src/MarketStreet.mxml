@@ -5,8 +5,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	
-	
+
 	<fx:Script>
 		<![CDATA[
 			import com.greensock.events.LoaderEvent;
@@ -36,8 +35,22 @@
 				debugger = new MonsterDebugger(this);
 				MonsterDebugger.clearTraces();
 				
+				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+				
+				
 				settingsLoader = new XMLLoader("settings.xml", { onComplete: onSettingsLoaded });
 				settingsLoader.load();
+			}
+			
+			private function onAddedToStage(e:Event):void
+			{
+				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+				this.stage.addEventListener(Event.RESIZE, onResize);
+			}
+			
+			private function onResize(e:Event):void
+			{
+				if (loop) { loop.resize(); }
 			}
 			
 			private function onSettingsLoaded(e:LoaderEvent):void

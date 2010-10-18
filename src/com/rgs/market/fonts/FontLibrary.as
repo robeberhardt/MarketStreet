@@ -4,16 +4,16 @@ package com.rgs.market.fonts
 	
 	public class FontLibrary extends Sprite
 	{
-		[Embed(source="../../../../assets/fonts/FuturaStd-Light.otf", fontName="Futura Light", mimeType="application/x-font-opentype")]
+		[Embed(source="../../../../../assets/fonts/FuturaStd-Light.otf", fontName="Futura Light", mimeType="application/x-font-opentype")]
 		private static var FuturaLight : Class;
 		
-		[Embed(source="../../../../assets/fonts/FuturaStd-Book.otf", fontName="Futura Book", mimeType="application/x-font-opentype")]
+		[Embed(source="../../../../../assets/fonts/FuturaStd-Book.otf", fontName="Futura Book", mimeType="application/x-font-opentype")]
 		private static var FuturaBook : Class;
 		
-		[Embed(source="../../../../assets/fonts/FuturaStd-Medium.otf", fontName="Futura Medium", mimeType="application/x-font-opentype")]
+		[Embed(source="../../../../../assets/fonts/FuturaStd-Medium.otf", fontName="Futura Medium", mimeType="application/x-font-opentype")]
 		private static var FuturaMedium : Class;
 		
-		[Embed(source="../../../../assets/fonts/FuturaStd-Bold.otf", fontName="Futura Bold", fontWeight = "bold", mimeType="application/x-font-opentype")]
+		[Embed(source="../../../../../assets/fonts/FuturaStd-Bold.otf", fontName="Futura Bold", fontWeight = "bold", mimeType="application/x-font-opentype")]
 		private static var FuturaBold : Class;
 		
 		private static var instance					: FontLibrary;

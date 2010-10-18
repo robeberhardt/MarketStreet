@@ -45,6 +45,12 @@ package com.rgs.market
 			loader.load();
 		}
 		
+		public function resize():void
+		{
+			scaleX = stage.stageWidth / 1280;
+			scaleY = stage.stageHeight / 800;
+		}
+		
 		private function onComplete(e:LoaderEvent):void
 		{
 			loader.playVideo();
