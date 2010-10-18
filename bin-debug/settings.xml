@@ -1,0 +1,46 @@
+<settings>
+	<account>
+		<username>marketstreetproject@gmail.com</username>
+		<password>artery321</password>
+		<calendarName>projection</calendarName>
+	</account>
+	<poem>
+		<!--
+			You can put 'today' in here and we'll grab the poem for today
+			or you can put in an explicit date in MM/DD/YYYY format
+			i.e. '08/20/1964' and we'll try to find a poem for that date
+		-->
+		<date>10/18/2010</date>
+	</poem>
+	<video>
+		<url>assets/video.flv</url>
+		<width>1200</width>
+		<height>720</height>
+		<xpos>0</xpos>
+		<ypos>0</ypos>
+		<loop>true</loop>
+	</video>
+	<timing>
+		<lineIn>1</lineIn>
+		<lineOut>1</lineOut>
+		<speed>2</speed>
+		<pauseAfterLastLine>10</pauseAfterLastLine>
+	</timing>
+	<fallback>
+		<!-- 
+			if no poem can be found we'll try to find one on the remote date 
+			listed below. If we still can't find one, we'll use the text 
+			of the 'local' fallback poem...
+		-->
+		<remote>
+			<date>08/20/2010</date>
+		</remote>
+		<local>
+There was a young local named Mallory,
+who drew but a very small salary.
+When he went to the show,
+his wallet made him go
+to a seat in the uppermost gallery.
+		</local>
+	</fallback>
+</settings>

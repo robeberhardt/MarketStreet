@@ -1,0 +1,51 @@
+package com.rgs.market.fonts
+{
+	import flash.display.Sprite;
+	
+	public class FontLibrary extends Sprite
+	{
+		[Embed(source="../../../../assets/fonts/FuturaStd-Light.otf", fontName="Futura Light", mimeType="application/x-font-opentype")]
+		private static var FuturaLight : Class;
+		
+		[Embed(source="../../../../assets/fonts/FuturaStd-Book.otf", fontName="Futura Book", mimeType="application/x-font-opentype")]
+		private static var FuturaBook : Class;
+		
+		[Embed(source="../../../../assets/fonts/FuturaStd-Medium.otf", fontName="Futura Medium", mimeType="application/x-font-opentype")]
+		private static var FuturaMedium : Class;
+		
+		[Embed(source="../../../../assets/fonts/FuturaStd-Bold.otf", fontName="Futura Bold", fontWeight = "bold", mimeType="application/x-font-opentype")]
+		private static var FuturaBold : Class;
+		
+		private static var instance					: FontLibrary;
+		private static var allowInstantiation		: Boolean;
+		
+		public static const FUTURA_LIGHT			: String = "Futura Light";
+		public static const FUTURA_BOLD				: String = "Futura Bold";
+		public static const FUTURA_BOOK				: String = "Futura Book";
+		public static const FUTURA_MEDIUM			: String = "Futura Medium";
+		
+		public function FontLibrary(name:String = "FontLibrary") 
+		{
+			if (!allowInstantiation) {
+				throw new Error("Error: Instantiation failed: Use FontLibrary.getInstance()");
+			} else {
+				this.name = name;
+				init();
+			}
+		}
+		
+		public static function getInstance(name:String = "FontLibrary"):FontLibrary {
+			if (instance == null) {
+				allowInstantiation = true;
+				instance = new FontLibrary(name);
+				allowInstantiation = false;
+			}
+			return instance;
+		}
+		
+		private function init():void
+		{		
+			//
+		}
+	}
+}

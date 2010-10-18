@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="1280" height="800" frameRate="30" backgroundColor="#000000" creationComplete="init()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import com.greensock.events.LoaderEvent;
+			import com.greensock.loading.XMLLoader;
+			import com.rgs.market.BubbleManager;
+			import com.rgs.market.PoemRetriever;
+			import com.rgs.market.VideoLooper;
+			
+			import flash.display.LoaderInfo;
+			
+			import mx.core.FlexGlobals;
+			
+			import nl.demonsters.debugger.MonsterDebugger;
+			
+			private var settingsLoader : XMLLoader;
+			private var settings : XML;
+			
+			private var todaysPoem : String;
+			private var bm : BubbleManager;
+			private var myPoemRetriever : PoemRetriever;
+			private var debugger : MonsterDebugger;
+			
+			private var loop : VideoLooper;
+			
+			private function init():void
+			{
+				debugger = new MonsterDebugger(this);
+				MonsterDebugger.clearTraces();
+				
+				settingsLoader = new XMLLoader("settings.xml", { onComplete: onSettingsLoaded });
+				settingsLoader.load();
+			}
+			
+			private function onSettingsLoaded(e:LoaderEvent):void
+			{
+				settings = settingsLoader.content;
+				MonsterDebugger.trace(this, settings.timing);
+				trace(settings.timing);
+				MonsterDebugger.trace(this, settings);
+				setupPoem();
+			}
+			
+			private function setupPoem():void
+			{
+				
+				
+				if (settings.poem.date.toString() == "today")
+				{
+					var today:Date = new Date();
+					today.seconds = 0;
+					today.minutes = 0;
+					today.hours = 0;
+					today.milliseconds = 0;
+				}
+				else
+				{
+					today = new Date(settings.poem.date.toString());
+				}
+				
+				
+				MonsterDebugger.trace(this, "Getting poem for " + today);
+				
+				myPoemRetriever = new PoemRetriever(settings.account.username, settings.account.password, settings.account.calendarName, today);
+				myPoemRetriever.gotPoemFallback.add(onPoemFallback);
+				myPoemRetriever.gotPoemSignal.add(onPoemReceived);
+				myPoemRetriever.getPoem();
+			}
+			
+			private function onPoemReceived(thePoem:String):void
+			{
+				MonsterDebugger.trace(this, ">>> got poem <<<", 0xff0000);
+				todaysPoem = thePoem;
+				MonsterDebugger.trace(this, todaysPoem);
+				setupVideo();
+			}
+			
+			private function onPoemFallback(thePoem:String):void
+			{
+				MonsterDebugger.trace(this, ">>> poem fallback <<<", 0xff0000);
+				todaysPoem = thePoem;
+				MonsterDebugger.trace(this, todaysPoem);
+				setupVideo();
+			}
+			
+			private function setupVideo():void
+			{
+				loop = new VideoLooper(settings.video.url, settings.video.width, settings.video.height, settings.video.xpos, settings.video.ypos, settings.video.loop);
+				this.stage.addChild(loop);
+				
+				setupBubbleManager();
+			}
+			
+			private function setupBubbleManager():void
+			{
+				bm = new BubbleManager(todaysPoem, settings.timing);
+				this.stage.addChild(bm);
+			}
+		]]>
+	</fx:Script>
+</s:Application>
