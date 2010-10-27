@@ -8,8 +8,11 @@
 
 	<fx:Script>
 		<![CDATA[
+			import com.greensock.TweenMax;
+			import com.greensock.easing.Quad;
 			import com.greensock.events.LoaderEvent;
 			import com.greensock.loading.XMLLoader;
+			import com.rgs.market.Bubble;
 			import com.rgs.market.BubbleManager;
 			import com.rgs.market.PoemRetriever;
 			import com.rgs.market.VideoLooper;
@@ -37,7 +40,6 @@
 				
 				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 				
-				
 				settingsLoader = new XMLLoader("settings.xml", { onComplete: onSettingsLoaded });
 				settingsLoader.load();
 			}
@@ -45,6 +47,9 @@
 			private function onAddedToStage(e:Event):void
 			{
 				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+				
+				
+				
 				this.stage.addEventListener(Event.RESIZE, onResize);
 			}
 			
@@ -116,6 +121,10 @@
 			{
 				bm = new BubbleManager(todaysPoem, settings.timing);
 				this.stage.addChild(bm);
+				
+				var myBubble2:Bubble = new Bubble( { x:10, y:100,  strokeWidth:6, offsetX:150, offsetY:200, strokeColor:0xFF0000, neck: 2, width:300, height:100, fillAlpha: .25, cornerRadius: 10 } );
+				this.stage.addChild(myBubble2);
+				TweenMax.to(myBubble2, 7, { repeat:-1, yoyo: true, hexColors:{strokeColor:0x00FF00, fillColor:0x0000FF}, fillAlpha: .75, x:1000, height: 300, offsetX:-150, offsetY: -125, strokeWidth: 2, neck: 5, cornerRadius: 10, ease:Quad.easeInOut } );
 			}
 		]]>
 	</fx:Script>

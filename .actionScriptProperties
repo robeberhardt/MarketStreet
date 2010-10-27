@@ -12,7 +12,9 @@
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
-    <sourceAttachmentPath/>
+    <sourceAttachmentPath>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="/Users/rob/jobs/MarketStreet/libs/greensock.swc" sourcepath="/Users/rob/AS3 Library/greensock-bonus-all-v11/AS3" useDefaultLinkType="false"/>
+    </sourceAttachmentPath>
   </compiler>
   <applications>
     <application path="MarketStreet.mxml"/>
