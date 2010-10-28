@@ -11,8 +11,6 @@ package com.rgs.market
 		private var _anchorPoint			: Point;
 		private var _cornerPoint			: Point;
 
-//		private var _x						: Number;
-//		private var _y						: Number;
 		private var _offsetX				: Number;
 		private var _offsetY				: Number;
 		private var _width					: Number;
@@ -28,8 +26,6 @@ package com.rgs.market
 		public function Bubble(vars:Object=null)
 		{
 			this.vars = (vars != null) ? vars : {};
-//			_x = (this.vars.x) ? Number(this.vars.x) : 0;
-//			_y = (this.vars.y) ? Number(this.vars.y) : 0;
 			x = (this.vars.x) ? Number(this.vars.x) : 0;
 			y = (this.vars.y) ? Number(this.vars.y) : 0;
 			_offsetX = (this.vars.offsetX) ? Number(this.vars.offsetX) : 50;
@@ -47,24 +43,13 @@ package com.rgs.market
 			if (stage) { init(); } else { addEventListener(Event.ADDED_TO_STAGE, init); }
 		}
 		
-		
-
-		override public function set y(value:Number):void
+		public function init(e:Event=null):void
 		{
-			super.y = value;
-		}
-		
- 		override public function set x(value:Number):void
-		{
-			super.x = value;
-		}
-
-		private function init(e:Event=null):void
-		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
 			draw();
 		}
 		
-		private function draw():void
+		public function draw():void
 		{
 			with (this.graphics) 
 			{
@@ -101,6 +86,22 @@ package com.rgs.market
 					endFill();
 				}
 			}
+			postDraw();
+		}
+		
+		public function postDraw():void
+		{
+			// for override
+		}
+		
+		override public function set y(value:Number):void
+		{
+			super.y = value;
+		}
+		
+		override public function set x(value:Number):void
+		{
+			super.x = value;
 		}
 
 		public function get strokeColor():Number
@@ -222,7 +223,5 @@ package com.rgs.market
 		{
 			_neck = value;
 		}
-
-
 	}
 }
