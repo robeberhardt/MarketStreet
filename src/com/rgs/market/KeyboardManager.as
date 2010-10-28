@@ -27,8 +27,8 @@ package com.rgs.market
 			} else {
 				this.name = name;
 				restartSignal = new Signal();
-				loadSignal = new Signal();
 				nextSignal = new Signal();
+				loadSignal = new Signal();
 				previousSignal = new Signal();
 				
 				_enabled = true;
@@ -58,13 +58,16 @@ package com.rgs.market
 			{
 				switch (e.keyCode)
 				{
+					
+					
 					case 82  : // R - RESTART CURRENT POEM FROM BEGINNING
 						restartSignal.dispatch();
 						break;
 					
 					case 76  : // L - LOAD DATA FROM CALENDAR
 						loadSignal.dispatch();
-						
+						break;
+					
 					case 78  : // N - NEXT POEM
 						nextSignal.dispatch();
 						break;

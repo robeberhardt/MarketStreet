@@ -126,8 +126,9 @@
 				this.stage.addChild(KeyboardManager.getInstance());
 				KeyboardManager.getInstance().restartSignal.add(onRestartKey);
 				KeyboardManager.getInstance().loadSignal.add(onLoadKey);
-				KeyboardManager.getInstance().nextSignal.add(onNextKey);
 				KeyboardManager.getInstance().previousSignal.add(onPreviousKey);
+				KeyboardManager.getInstance().nextSignal.add(onNextKey);
+
 			}
 			
 			private function onRestartKey():void
@@ -143,6 +144,9 @@
 			private function onLoadKey():void
 			{
 				MonsterDebugger.trace(this, "got load key");
+				
+				bm.showEnded.addOnce(function():void { loadPoem(poemDate); });
+				bm.endShow();
 			}
 			
 			private function onNextKey():void
@@ -163,9 +167,15 @@
 			private function onPreviousKey():void
 			{
 				MonsterDebugger.trace(this, "got previous key");
+				bm.showEnded.addOnce
+					(
+						function():void
+						{
+							poemDate.date --;
+							loadPoem(poemDate);
+						}
+					);
 				bm.endShow();
-				poemDate.date --;
-				loadPoem(poemDate);
 			}
 		]]>
 	</fx:Script>

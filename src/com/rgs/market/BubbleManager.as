@@ -138,7 +138,7 @@ package com.rgs.market
 			TweenMax.killAll();
 			TweenMax.to(leftBubble, .5, { alpha: 0 });
 			TweenMax.to(rightBubble, .5, { alpha: 0 });
-			TweenMax.delayedCall(1, function():void 
+			TweenMax.delayedCall(.5, function():void 
 			{ 
 				showEnded.dispatch();
 				KeyboardManager.getInstance().enabled = true;

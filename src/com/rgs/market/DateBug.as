@@ -45,7 +45,8 @@ package com.rgs.market
 			field.alpha = 1;
 			addChild(field);
 			
-			
+			x = stage.stageWidth - 350;
+			y = stage.stageHeight - 50;
 
 		}
 		
