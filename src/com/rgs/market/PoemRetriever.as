@@ -30,7 +30,7 @@ package com.rgs.market
 		public var gotPoemSignal : Signal;
 		public var gotPoemFallback : Signal;
 		
-		public function PoemRetriever(name:String, pw:String, cal:String, date:Date)
+		public function PoemRetriever(name:String, pw:String, cal:String)
 		{
 			gotPoemSignal = new Signal(String);
 			gotPoemFallback = new Signal(String);
@@ -40,7 +40,7 @@ package com.rgs.market
 			user.userPassword = pw;
 			
 			calName = cal;
-			eventDate = date;
+			//eventDate = date;
 			
 			MonsterDebugger.trace(this, "trying to authenticate...");
 			MonsterDebugger.trace(this, user);
@@ -48,8 +48,10 @@ package com.rgs.market
 			
 		}
 		
-		public function getPoem():void
+		public function getPoem(date:Date):void
 		{
+			eventDate = date;
+			
 			auth = new GoogleCalendarAuthenticator();
 			auth.addEventListener(GoogleCalendarAuthenticatorEvent.AUTHENTICATION_RESPONSE, onAuthResponse);
 			auth.addEventListener(GoogleCalendarAuthenticatorEvent.AUTHENTICATION_FAULT, onAuthFault);

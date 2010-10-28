@@ -15,6 +15,8 @@ package com.rgs.market
 	
 	import nl.demonsters.debugger.MonsterDebugger;
 	
+	import org.osflash.signals.Signal;
+	
 	public class BubbleManager extends Sprite
 	{
 		private var poem : String;
@@ -36,10 +38,13 @@ package com.rgs.market
 		private var leftBubble : WordBubble;
 		private var rightBubble : WordBubble;
 		private var currentSide : WordBubble;
+		
+		public var showEnded : Signal;
 				
 		public function BubbleManager(theSettings:XMLList)
 		{
 			timing = theSettings;
+			showEnded = new Signal();
 			if (stage) { init(); } else { addEventListener(Event.ADDED_TO_STAGE, init); }
 		}
 		
@@ -129,10 +134,15 @@ package com.rgs.market
 		
 		public function endShow():void
 		{
-			TweenMax.killAll(false, false, true);
-			TweenMax.to(leftBubble, 1, { alpha: 0 });
-			TweenMax.to(rightBubble, 1, { alpha: 0 });
-			TweenMax.delayedCall(2, startShow);
+			KeyboardManager.getInstance().enabled = false;
+			TweenMax.killAll();
+			TweenMax.to(leftBubble, .5, { alpha: 0 });
+			TweenMax.to(rightBubble, .5, { alpha: 0 });
+			TweenMax.delayedCall(1, function():void 
+			{ 
+				showEnded.dispatch();
+				KeyboardManager.getInstance().enabled = true;
+			});
 		}
 		
 		public function set poemText(value:String):void
@@ -146,6 +156,12 @@ package com.rgs.market
 			
 			linesArray = poemField.text.split("\r");
 			
+		}
+		
+		public function resize():void
+		{
+			scaleX = stage.stageWidth / 1280;
+			scaleY = stage.stageHeight / 800;
 		}
 	}
 }

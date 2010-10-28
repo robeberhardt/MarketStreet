@@ -14,6 +14,7 @@
 			import com.greensock.loading.XMLLoader;
 			import com.rgs.market.Bubble;
 			import com.rgs.market.BubbleManager;
+			import com.rgs.market.DateBug;
 			import com.rgs.market.KeyboardManager;
 			import com.rgs.market.PoemRetriever;
 			import com.rgs.market.VideoLooper;
@@ -31,8 +32,11 @@
 			private var bm : BubbleManager;
 			private var myPoemRetriever : PoemRetriever;
 			private var debugger : MonsterDebugger;
+			private var dateBug : DateBug;
 			
 			private var loop : VideoLooper;
+			
+			private var poemDate : Date;
 			
 			private function init():void
 			{
@@ -47,90 +51,75 @@
 			
 			private function onAddedToStage(e:Event):void
 			{
-				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-				
-				
-				
+				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);				
 				this.stage.addEventListener(Event.RESIZE, onResize);
 			}
 			
 			private function onResize(e:Event):void
 			{
 				if (loop) { loop.resize(); }
+				if (bm) { bm.resize(); }
+				if (dateBug) { dateBug.resize(); }
 			}
 			
 			private function onSettingsLoaded(e:LoaderEvent):void
 			{
 				settings = settingsLoader.content;
-				MonsterDebugger.trace(this, settings.timing);
-				trace(settings.timing);
-				MonsterDebugger.trace(this, settings);
-				setupPoem();
-			}
-			
-			private function setupPoem():void
-			{
-				
 				
 				if (settings.poem.date.toString() == "today")
 				{
-					var today:Date = new Date();
-					today.seconds = 0;
-					today.minutes = 0;
-					today.hours = 0;
-					today.milliseconds = 0;
+					poemDate = new Date();
+					poemDate.seconds = 0;
+					poemDate.minutes = 0;
+					poemDate.hours = 0;
+					poemDate.milliseconds = 0;
 				}
 				else
 				{
-					today = new Date(settings.poem.date.toString());
+					poemDate = new Date(settings.poem.date.toString());
 				}
 				
-				
-				MonsterDebugger.trace(this, "Getting poem for " + today);
-				
-				myPoemRetriever = new PoemRetriever(settings.account.username, settings.account.password, settings.account.calendarName, today);
+				myPoemRetriever = new PoemRetriever(settings.account.username, settings.account.password, settings.account.calendarName);
 				myPoemRetriever.gotPoemFallback.add(onPoemFallback);
 				myPoemRetriever.gotPoemSignal.add(onPoemReceived);
-				myPoemRetriever.getPoem();
+				
+				loop = new VideoLooper(settings.video.url, settings.video.width, settings.video.height, settings.video.xpos, settings.video.ypos, settings.video.loop);
+				this.stage.addChild(loop);
+				
+				bm = new BubbleManager(settings.timing);
+				this.stage.addChild(bm);
+				loadPoem(poemDate);
+				
+				dateBug = new DateBug();
+				this.stage.addChild(dateBug);
+				
+			
+				setupKeyboardManager();
+				
+			}
+			
+			private function loadPoem(date:Date):void
+			{
+				MonsterDebugger.trace(this, "Getting poem for " + date);
+				myPoemRetriever.getPoem(date);
 			}
 			
 			private function onPoemReceived(thePoem:String):void
 			{
-				MonsterDebugger.trace(this, ">>> got poem <<<", 0xff0000);
-				todaysPoem = thePoem;
-				MonsterDebugger.trace(this, todaysPoem);
-				setupVideo();
+				dateBug.text = poemDate;
+				bm.poemText = thePoem;
+				bm.startShow();
 			}
 			
 			private function onPoemFallback(thePoem:String):void
 			{
 				MonsterDebugger.trace(this, ">>> poem fallback <<<", 0xff0000);
-				todaysPoem = thePoem;
-				MonsterDebugger.trace(this, todaysPoem);
-				setupVideo();
-			}
-			
-			private function setupVideo():void
-			{
-				loop = new VideoLooper(settings.video.url, settings.video.width, settings.video.height, settings.video.xpos, settings.video.ypos, settings.video.loop);
-				this.stage.addChild(loop);
-				
-				setupBubbleManager();
-			}
-			
-			private function setupBubbleManager():void
-			{
-				bm = new BubbleManager(settings.timing);
-				this.stage.addChild(bm);
-				bm.poemText = todaysPoem;
+				dateBug.showError(poemDate);
+				bm.poemText = thePoem;
 				bm.startShow();
-				
-				setupKeyboardManager();
-				
-//				var myBubble2:Bubble = new Bubble( { x:10, y:100,  strokeWidth:6, offsetX:150, offsetY:200, strokeColor:0xFF0000, neck: 2, width:300, height:100, fillAlpha: .25, cornerRadius: 10 } );
-//				this.stage.addChild(myBubble2);
-//				TweenMax.to(myBubble2, 7, { repeat:-1, yoyo: true, hexColors:{strokeColor:0x00FF00, fillColor:0x0000FF}, fillAlpha: .75, x:1000, height: 300, offsetX:-150, offsetY: -125, strokeWidth: 2, neck: 5, cornerRadius: 10, ease:Quad.easeInOut } );
 			}
+			
+			
 			
 			private function setupKeyboardManager():void
 			{
@@ -144,6 +133,10 @@
 			private function onRestartKey():void
 			{
 				MonsterDebugger.trace(this, "restarting show");
+				bm.showEnded.addOnce( function():void
+				{
+					bm.startShow();
+				});
 				bm.endShow();
 			}
 			
@@ -155,11 +148,24 @@
 			private function onNextKey():void
 			{
 				MonsterDebugger.trace(this, "got next key");
+				
+				bm.showEnded.addOnce
+				(
+					function():void
+					{
+						poemDate.date ++;
+						loadPoem(poemDate);
+					}
+				);
+				bm.endShow();
 			}
 			
 			private function onPreviousKey():void
 			{
 				MonsterDebugger.trace(this, "got previous key");
+				bm.endShow();
+				poemDate.date --;
+				loadPoem(poemDate);
 			}
 		]]>
 	</fx:Script>

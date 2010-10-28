@@ -18,6 +18,8 @@ package com.rgs.market
 		public var nextSignal							: Signal;
 		public var previousSignal						: Signal;
 		
+		private var _enabled							: Boolean;
+		
 		public function KeyboardManager(name:String="KeyboardManager")
 		{
 			if (!allowInstantiation) {
@@ -28,6 +30,8 @@ package com.rgs.market
 				loadSignal = new Signal();
 				nextSignal = new Signal();
 				previousSignal = new Signal();
+				
+				_enabled = true;
 				
 				if (stage) { init(); } else { addEventListener(Event.ADDED_TO_STAGE, init); }
 			}
@@ -50,29 +54,35 @@ package com.rgs.market
 		
 		private function handleKeyDown(e:KeyboardEvent):void
 		{
-			
-			switch (e.keyCode)
+			if (_enabled)
 			{
-				case 82  : // R - RESTART CURRENT POEM FROM BEGINNING
-					restartSignal.dispatch();
-					break;
-				
-				case 76  : // L - LOAD DATA FROM CALENDAR
-					loadSignal.dispatch();
-				
-				case 78  : // N - NEXT POEM
-					nextSignal.dispatch();
-					break;
-				
-				case 80  : // P - PREVIOUS POEM
-					previousSignal.dispatch();
-					break;
-				
-				default :
-					//
-					break;
+				switch (e.keyCode)
+				{
+					case 82  : // R - RESTART CURRENT POEM FROM BEGINNING
+						restartSignal.dispatch();
+						break;
+					
+					case 76  : // L - LOAD DATA FROM CALENDAR
+						loadSignal.dispatch();
+						
+					case 78  : // N - NEXT POEM
+						nextSignal.dispatch();
+						break;
+					
+					case 80  : // P - PREVIOUS POEM
+						previousSignal.dispatch();
+						break;
+					
+					default :
+						//
+						break;
+				}
 			}
-			
+		}
+		
+		public function set enabled(val:Boolean):void
+		{
+			_enabled = val;
 		}
 	}
 }
