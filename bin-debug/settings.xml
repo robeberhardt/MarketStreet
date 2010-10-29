@@ -10,7 +10,8 @@
 			or you can put in an explicit date in MM/DD/YYYY format
 			i.e. '08/20/1964' and we'll try to find a poem for that date
 		-->
-		<date>10/17/2010</date>
+		<startDate>10/17/2010</startDate>
+		<dateCheckInterval>5000</dateCheckInterval>
 	</poem>
 	<video>
 		<url>assets/video.flv</url>

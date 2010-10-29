@@ -38,6 +38,8 @@
 			
 			private var poemDate : Date;
 			
+			private var loadTimer : Timer;
+			
 			private function init():void
 			{
 				debugger = new MonsterDebugger(this);
@@ -66,7 +68,9 @@
 			{
 				settings = settingsLoader.content;
 				
-				if (settings.poem.date.toString() == "today")
+				
+				
+				if (settings.poem.startDate.toString() == "today")
 				{
 					poemDate = new Date();
 					poemDate.seconds = 0;
@@ -76,9 +80,20 @@
 				}
 				else
 				{
-					poemDate = new Date(settings.poem.date.toString());
+					poemDate = new Date(settings.poem.startDate.toString());
 				}
 				
+				var interval:Number = Number(settings.poem.dateCheckInterval);
+				MonsterDebugger.trace(this, "interval: " + interval);
+				loadTimer = new Timer(interval);
+				loadTimer.addEventListener(TimerEvent.TIMER, onReloadInterval);
+				loadTimer.start();
+				
+				setupComponents();				
+			}
+			
+			private function setupComponents():void
+			{
 				myPoemRetriever = new PoemRetriever(settings.account.username, settings.account.password, settings.account.calendarName);
 				myPoemRetriever.gotPoemFallback.add(onPoemFallback);
 				myPoemRetriever.gotPoemSignal.add(onPoemReceived);
@@ -93,9 +108,15 @@
 				dateBug = new DateBug();
 				this.stage.addChild(dateBug);
 				
-			
 				setupKeyboardManager();
-				
+			}
+			
+			private function onReloadInterval(e:TimerEvent):void
+			{
+				var nowDate:Date = new Date();
+				var nowDay:Number = nowDate.date;
+				MonsterDebugger.trace(this, "nowDate: " + nowDay);
+				//loadPoem(poemDate);
 			}
 			
 			private function loadPoem(date:Date):void
@@ -119,7 +140,11 @@
 				bm.startShow();
 			}
 			
-			
+			/* *****************************************************************************
+			*
+			*               KEYBOARD STUFF
+			*
+			*/
 			
 			private function setupKeyboardManager():void
 			{
@@ -177,6 +202,8 @@
 					);
 				bm.endShow();
 			}
+			
+			// *****************************************************************************
 		]]>
 	</fx:Script>
 </s:Application>
