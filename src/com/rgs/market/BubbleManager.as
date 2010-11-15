@@ -25,9 +25,9 @@ package com.rgs.market
 		private var leftField : TextField;
 		private var rightField : TextField;
 		private var lineFormat : TextFormat;
-		private var currentLine : int;
+		
 
-		private var linesArray : Array;
+		private var chunksArray : Array;
 
 		private var timing : XMLList;
 		private var ticks : Number;
@@ -42,7 +42,9 @@ package com.rgs.market
 		
 		private var box1 : WordBox;
 		private var box2 : WordBox;
-		private var currentSide : WordBox;
+		private var currentBox : WordBox;
+		private var currentChunkIndex : int;
+		private var numChunks : int;
 		
 		public var showEnded : Signal;
 				
@@ -100,57 +102,103 @@ package com.rgs.market
 			poemField.wordWrap = true;
 			poemField.alpha = .2;
 			
-			linesArray = new Array();
+			chunksArray = new Array();
+			
+			timeIn = Number(timing.lineIn);
+			timeOut = Number(timing.lineOut);
 						
 			
 		}
 		
+		public function startShow():void
+		{
+			currentChunkIndex = 0;
+			showNextChunk();
+		}
+		
 		private function showNextChunk():void
 		{
-			if (currentLine % 2 == 0)
+
+			trace("currentChunkIndex: " + currentChunkIndex + ", chunksArray.length: " + chunksArray.length);
+			
+			if (currentChunkIndex % 2 == 0)
 			{
-//				currentSide = leftBubble;
-				currentSide = box1;
+				TweenMax.to(box1, timeOut, { alpha: 0 });
+				TweenMax.to(box2, timeOut, { alpha: 0 });
 				
+				TweenMax.delayedCall(timeOut, function():void { 
+					box1.text = chunksArray[currentChunkIndex];
+					ticks = 1 + Number(timing.speed)*box1.text.length / 10;
+					
+					box1.x = stage.stageWidth * .5 + 50;
+					box1.y = Math.random() * 100 + 50;
+					
+					if (currentChunkIndex < chunksArray.length-1)
+					{
+						box1.showTriangle();
+					}
+					else
+					{
+						box1.hideTriangle();
+					}
+					
+					
+					TweenMax.to(box1, timeIn, { alpha: 1 } );
+					TweenMax.delayedCall(ticks, increment);
+				});
 			}
 			else
 			{
-//				currentSide = rightBubble;
-				currentSide = box2;
+				box2.text = chunksArray[currentChunkIndex];
+				ticks = 1 + Number(timing.speed)*box2.text.length / 10;
+				
+				if (Math.random() < .5)
+				{
+					box2.x = box1.x - 50;
+				}
+				else
+				{
+					box2.x = box1.x + 50;
+				}
+				
+				box2.y = box1.y + box1.height + 30;
+				
+				
+				if (currentChunkIndex < chunksArray.length-1)
+				{
+					box2.showTriangle();
+				}
+				else
+				{
+					box2.hideTriangle();
+				}
+				
+				
+				TweenMax.to(box2, timeIn, { alpha: 1 } );
+				TweenMax.delayedCall(ticks, increment);
 			}
-			
-			currentSide.text = linesArray[currentLine];
-			
-			currentSide.offsetY = Math.random()*350 + 100;
-			
-			ticks = 1 + Number(timing.speed)*currentSide.text.length / 10;
-			timeIn = Number(timing.lineIn);
-			timeOut = Number(timing.lineOut);
-			
-			TweenMax.to(currentSide, timeIn, { alpha: 1 } );
-			TweenMax.to(currentSide, timeOut, { alpha: 0, delay: ticks });
-			TweenMax.delayedCall(ticks, increment);
 		}
 		
 		private function increment():void
 		{
-			currentLine ++;
-			if (currentLine < linesArray.length)
+			currentChunkIndex ++;
+			if (currentChunkIndex < chunksArray.length)
 			{
 				showNextChunk();
 			}
 			else
 			{
-				currentLine = 0;
-				TweenMax.delayedCall(Number(timing.pauseAfterLastLine), showNextChunk);
+				currentChunkIndex = 0;
+				
+				TweenMax.delayedCall(4, function():void {  
+					TweenMax.to(box1, timeOut, { alpha: 0 });
+					TweenMax.to(box2, timeOut, { alpha: 0 });
+					TweenMax.delayedCall(Number(timing.pauseAfterLastLine), showNextChunk);
+				});
 			}
 		}
 		
-		public function startShow():void
-		{
-			currentLine = 0;
-			showNextChunk();
-		}
+
 		
 		public function endShow():void
 		{
@@ -176,7 +224,7 @@ package com.rgs.market
 			
 			poemField.text = poem;
 			
-			linesArray = poemField.text.split("\r\r");
+			chunksArray = poemField.text.split("\r\r");
 			
 		}
 		

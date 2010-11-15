@@ -19,6 +19,13 @@ package com.rgs.market
 		private var _fillColor				: Number;
 		private var _fillAlpha				: Number;
 		
+		private var _side					: String;
+		
+		public static const TOP				: String = "top";
+		public static const RIGHT			: String = "right";
+		public static const BOTTOM			: String = "bottom";
+		public static const LEFT			: String = "left";
+		
 		public function Triangle(vars:Object=null)
 		{
 			this.vars = (vars != null) ? vars : {};
@@ -31,6 +38,9 @@ package com.rgs.market
 			_strokeAlpha = (this.vars.strokeAlpha != null) ? Number(this.vars.strokeAlpha) : 1;
 			_fillColor = (this.vars.fillColor != null) ? Number(this.vars.fillColor) : 0x999999;
 			_fillAlpha = (this.vars.fillAlpha) ? Number(this.vars.fillAlpha) : 1;
+			_side = (this.vars.side) ? this.vars.side : BOTTOM;
+			
+			trace("this.vars.side: " + this.vars.side + "  --  _side: " + _side);
 			
 			if (stage) { init(); } else { addEventListener(Event.ADDED_TO_STAGE, init); }
 		}
@@ -43,18 +53,39 @@ package com.rgs.market
 		
 		public function draw():void
 		{
-			with (this.graphics) 
+			switch (_side)
 			{
-				clear();
-				lineStyle(_strokeWidth, _strokeColor, _strokeAlpha);
-				beginFill(_fillColor, _fillAlpha);
 				
-				moveTo(-(_width*.5), 0);
-				lineTo(_width*.5, 0);
-				lineTo(-(_width*.5), _height);
-				endFill();
+				case TOP :
+					
+					break;
+				
+				case RIGHT :
+					
+					break;
+				
+				case BOTTOM :
+					with (this.graphics) 
+					{
+						clear();
+						lineStyle(_strokeWidth, _strokeColor, _strokeAlpha);
+						beginFill(_fillColor, _fillAlpha);
+						
+						moveTo(-(_width*.5), 0);
+						lineTo(_width*.5, 0);
+						lineTo(0, _height);
+						lineTo(-(_width*.5), 0);
+						endFill();
+						
+					}
+					break;
+				
+				case LEFT :
+					
+					break;
 				
 			}
+			
 			postDraw();
 		}
 		

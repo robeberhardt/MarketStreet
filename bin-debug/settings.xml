@@ -10,8 +10,9 @@
 			or you can put in an explicit date in MM/DD/YYYY format
 			i.e. '08/20/1964' and we'll try to find a poem for that date
 		-->
-		<startDate>10/19/2010</startDate>
+		<startDate>11/20/2010</startDate>
 		<dateCheckInterval>5000</dateCheckInterval>
+		<prefix><![CDATA[>  ]]></prefix>
 	</poem>
 	<video>
 		<url>assets/video.flv</url>
@@ -24,7 +25,7 @@
 	<timing>
 		<lineIn>1</lineIn>
 		<lineOut>1</lineOut>
-		<speed>.5</speed>
+		<speed>1</speed>
 		<pauseAfterLastLine>10</pauseAfterLastLine>
 	</timing>
 	<fallback>
@@ -40,8 +41,14 @@
 There was a young local named Mallory,
 who drew but a very small salary.
 When he went to the show,
+
 his wallet made him go
 to a seat in the uppermost gallery.
+
+There was a young local named Mallory,
+who drew but a very small salary.
+When he went to the show,
+
 		</local>
 	</fallback>
 </settings>

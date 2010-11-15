@@ -1,6 +1,8 @@
 package com.rgs.market
 {
 	import flash.display.Sprite;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import nl.demonsters.debugger.MonsterDebugger;
 	
@@ -30,20 +32,35 @@ package com.rgs.market
 		public var gotPoemSignal : Signal;
 		public var gotPoemFallback : Signal;
 		
-		public function PoemRetriever(name:String, pw:String, cal:String)
+		private var timeout			: Timer;
+		
+		private var settings		: XML;
+		
+		public function PoemRetriever(settings:XML)
 		{
+			
+			this.settings = settings;
+			
 			gotPoemSignal = new Signal(String);
 			gotPoemFallback = new Signal(String);
 			
 			user = new GoogleCalendarUserVO();
-			user.userName = name;
-			user.userPassword = pw;
+//			user.userName = name;
+//			user.userPassword = pw;
 			
-			calName = cal;
+			user.userName = settings.account.username;
+			user.userPassword = settings.account.password;
+			calName = settings.account.calendarName;
+			
+//			calName = cal;
 			//eventDate = date;
 			
 			MonsterDebugger.trace(this, "trying to authenticate...");
 			MonsterDebugger.trace(this, user);
+			
+			timeout = new Timer(10000);
+			timeout.addEventListener(TimerEvent.TIMER, onTimeout);
+			
 			
 			
 		}
@@ -58,8 +75,10 @@ package com.rgs.market
 			auth.authenticateUser(user.userName, user.userPassword);
 			
 			serv = new GoogleCalendarService();
-			//			serv.addEventListener(GoogleCalendarServiceEvent.ADD_CALENDAR_RESPONSE, onServiceResponse);
-			//			serv.addEventListener(GoogleCalendarServiceEvent.ADD_CALENDAR_FAULT, onServiceResponse);
+			
+			timeout.start();
+			
+
 		}
 		
 		private function onAuthFault(e:GoogleCalendarAuthenticatorEvent):void
@@ -71,6 +90,7 @@ package com.rgs.market
 		
 		private function onAuthResponse(e:GoogleCalendarAuthenticatorEvent):void
 		{
+			timeout.stop();
 			MonsterDebugger.trace(this, "Authorization success!");
 			
 			authUser = e.authenticatedUser;
@@ -120,6 +140,15 @@ package com.rgs.market
 			}			
 		}
 		
+		private function onTimeout(e:TimerEvent):void
+		{
+			auth.removeEventListener(GoogleCalendarAuthenticatorEvent.AUTHENTICATION_RESPONSE, onAuthResponse);
+			auth.removeEventListener(GoogleCalendarAuthenticatorEvent.AUTHENTICATION_FAULT, onAuthFault);
+			serv.removeEventListener(GoogleCalendarServiceEvent.GET_ALL_CALENDARS_RESPONSE, onGetAllCalendarsResponse);
+			serv.removeEventListener(GoogleCalendarServiceEvent.GET_ALL_CALENDARS_FAULT, onGetAllCalendarsFault);
+			fallback();
+		}
+		
 		private function onGetEventsForDateRangeFault(e:GoogleCalendarEventsServiceEvent):void
 		{
 			MonsterDebugger.trace(this, "couldn't events any events for that date");
@@ -134,7 +163,7 @@ package com.rgs.market
 			{
 				var ev:GoogleCalendarEventVO = e.calendarEvents[0];
 				MonsterDebugger.trace(this, e);
-				gotPoemSignal.dispatch(ev.content.content);
+				gotPoemSignal.dispatch(settings.poem.prefix + ev.content.content);
 			}
 			else
 			{
@@ -170,7 +199,8 @@ package com.rgs.market
 		
 		private function fallback():void
 		{
-			gotPoemFallback.dispatch("There was a young rustic named Mallory,\nwho drew but a very small salary.\nWhen he went to the show,\nhis purse made him go\nto a seat in the uppermost gallery.");
+//			 gotPoemFallback.dispatch("There was a young rustic named Mallory,\nwho drew but a very small salary.\nWhen he went to the show,\nhis purse made him go\nto a seat in the uppermost gallery.");
+			gotPoemFallback.dispatch(settings.fallback.local.toString());
 		}
 		
 		

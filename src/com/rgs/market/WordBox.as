@@ -72,7 +72,7 @@ package com.rgs.market
 			lineTestField.background = false;
 			lineTestField.backgroundColor = 0x000000;
 			
-			triangle = new Triangle( { x:150, y:200, width:30, height:15, fillColor:0xffffff, fillAlpha: 1 } );
+			triangle = new Triangle( { width:30, height:15, strokeWidth: 0, strokeColor: 0xffffff, fillColor:0xffffff, fillAlpha: 1 } );
 			addChild(triangle);
 		
 		}
@@ -134,7 +134,18 @@ package com.rgs.market
 			
 			height = field.height + 14;
 			draw();
-			
+			triangle.x = 50 + (Math.random()*(width-100));
+			triangle.y = height;
+		}
+		
+		public function showTriangle():void
+		{
+			triangle.alpha = 1;
+		}
+		
+		public function hideTriangle():void
+		{
+			triangle.alpha = 0;
 		}
 		
 		

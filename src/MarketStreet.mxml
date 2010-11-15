@@ -94,7 +94,8 @@
 			
 			private function setupComponents():void
 			{
-				myPoemRetriever = new PoemRetriever(settings.account.username, settings.account.password, settings.account.calendarName);
+//				myPoemRetriever = new PoemRetriever(settings.account.username, settings.account.password, settings.account.calendarName);
+				myPoemRetriever = new PoemRetriever(settings);
 				myPoemRetriever.gotPoemFallback.add(onPoemFallback);
 				myPoemRetriever.gotPoemSignal.add(onPoemReceived);
 				
