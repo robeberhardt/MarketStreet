@@ -58,8 +58,8 @@ package com.rgs.market
 			auth.authenticateUser(user.userName, user.userPassword);
 			
 			serv = new GoogleCalendarService();
-//			serv.addEventListener(GoogleCalendarServiceEvent.ADD_CALENDAR_RESPONSE, onServiceResponse);
-//			serv.addEventListener(GoogleCalendarServiceEvent.ADD_CALENDAR_FAULT, onServiceResponse);
+			//			serv.addEventListener(GoogleCalendarServiceEvent.ADD_CALENDAR_RESPONSE, onServiceResponse);
+			//			serv.addEventListener(GoogleCalendarServiceEvent.ADD_CALENDAR_FAULT, onServiceResponse);
 		}
 		
 		private function onAuthFault(e:GoogleCalendarAuthenticatorEvent):void
@@ -91,11 +91,11 @@ package com.rgs.market
 		{
 			MonsterDebugger.trace(this, "Got all calendars");
 			
-//			for each (var c:GoogleCalendarVO in e.allCalendars)
-//			{
-//				trace(c + ", " + c.title.title);
-//				
-//			}
+			//			for each (var c:GoogleCalendarVO in e.allCalendars)
+			//			{
+			//				trace(c + ", " + c.title.title);
+			//				
+			//			}
 			
 			for each (var c:GoogleCalendarVO in e.allCalendars)
 			{
@@ -141,18 +141,18 @@ package com.rgs.market
 				fallback();
 			}
 			
-//			trace(e);
-//			trace("Event for date range: ");
-//			trace("there are " + e.calendarEvents.length);
+			//			trace(e);
+			//			trace("Event for date range: ");
+			//			trace("there are " + e.calendarEvents.length);
 			
 			
 			
 			/*
 			for (var i:int=0; i<e.calendarEvents.length; i++)
 			{
-				var theEvent:GoogleCalendarEventVO = e.calendarEvents[i] as GoogleCalendarEventVO;
-				var theWhere:WhereVO = theEvent.where[0];
-				MonsterDebugger.trace(this, theEvent.title.title + " -- " + theWhere.valueString);
+			var theEvent:GoogleCalendarEventVO = e.calendarEvents[i] as GoogleCalendarEventVO;
+			var theWhere:WhereVO = theEvent.where[0];
+			MonsterDebugger.trace(this, theEvent.title.title + " -- " + theWhere.valueString);
 			}
 			
 			

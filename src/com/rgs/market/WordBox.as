@@ -1,5 +1,6 @@
 package com.rgs.market
 {
+	import com.gskinner.StringUtils;
 	import com.rgs.market.fonts.FontLibrary;
 	
 	import flash.events.Event;
@@ -12,15 +13,18 @@ package com.rgs.market
 	
 	import nl.demonsters.debugger.MonsterDebugger;
 	
-
-	public class WordBubble extends Bubble
+	
+	public class WordBox extends Box
 	{
 		private var format : TextFormat;
 		private var field : TextField;
 		
-		public function WordBubble(vars:Object=null)
+		private var lineTestField : TextField;
+		private var triangle				: Triangle;
+		
+		public function WordBox(vars:Object=null)
 		{
-			super(vars);
+			super(vars);	
 		}
 		
 		override public function init(e:Event=null):void
@@ -30,16 +34,17 @@ package com.rgs.market
 			format = new TextFormat();
 			format.letterSpacing = 1;
 			format.size = 128;
+			format.leading = 0;
 			format.leftMargin = 10;
 			format.rightMargin = 10;
 			format.color = 0xffffff;
-//			format.align = TextFormatAlign.CENTER;
+			//			format.align = TextFormatAlign.CENTER;
 			format.align = TextFormatAlign.LEFT;
 			format.font = FontLibrary.ACME_SECRET_AGENT;
 			
 			field = new TextField();
 			field.antiAliasType = AntiAliasType.ADVANCED;
-//			field.autoSize = TextFieldAutoSize.CENTER;
+			//			field.autoSize = TextFieldAutoSize.CENTER;
 			field.autoSize = TextFieldAutoSize.LEFT;
 			field.wordWrap = true;
 			field.multiline = true;
@@ -52,8 +57,24 @@ package com.rgs.market
 			field.background = false;
 			field.backgroundColor = 0x000000;
 			addChild(field);
-
-			draw();
+			
+			lineTestField = new TextField();
+			lineTestField.antiAliasType = AntiAliasType.ADVANCED;
+			lineTestField.autoSize = TextFieldAutoSize.LEFT;
+			lineTestField.wordWrap = false;
+			lineTestField.multiline = true;
+			lineTestField.embedFonts = true;
+			lineTestField.selectable = false;
+			lineTestField.width = 500;
+			lineTestField.alpha = 1;
+			lineTestField.border = false;
+			lineTestField.borderColor = 0xFF0000;
+			lineTestField.background = false;
+			lineTestField.backgroundColor = 0x000000;
+			
+			triangle = new Triangle( { x:150, y:200, width:30, height:15, fillColor:0xffffff, fillAlpha: 1 } );
+			addChild(triangle);
+		
 		}
 		
 		override public function postDraw():void
@@ -74,20 +95,36 @@ package com.rgs.market
 		
 		public function set text(value:String):void
 		{
+			format.size = 128;
 			
 			field.text = value;
 			field.setTextFormat(format);
 			
-//			while(field.textHeight > 100)
-//			{
-//				format.size = Number(format.size) - 1;
-//				field.setTextFormat(format);
-//			}
+			lineTestField.text = value;
+			lineTestField.setTextFormat(format);
 			
-			while(field.textWidth > 450)
+			
+			
+			while(field.textHeight > 150)
 			{
 				format.size = Number(format.size) - 1;
 				field.setTextFormat(format);
+			}
+			
+//			while (field.textWidth < (field.width - 30))
+//			{
+//				format.size = Number(format.size) + 1;
+//				field.setTextFormat(format);
+//			}
+			
+			var count:uint = StringUtils.countOf(field.text, "\r", false);
+			if (count > 0)
+			{
+				while(field.numLines > lineTestField.numLines)
+				{
+					format.size = Number(format.size) - 1;
+					field.setTextFormat(format);
+				}
 			}
 			
 			field.height = field.textHeight + 6;
@@ -95,18 +132,21 @@ package com.rgs.market
 			field.x = textCorner.x;
 			field.y = textCorner.y;
 			
+			height = field.height + 14;
+			draw();
+			
 		}
 		
 		
 		public function get textCorner():Point
-		{
+		{	
 			var cornerX:Number;
 			var cornerY:Number;
 			
 			(field.numLines == 1) ? cornerY = offsetY + 40 : cornerY = offsetY + 20;
 			(offsetX > 0) ? cornerX = offsetX : cornerX = offsetX - width - 20;
 			
-			return new Point(cornerX, cornerY);
+			return new Point(4, 4);
 		}
 	}
 }

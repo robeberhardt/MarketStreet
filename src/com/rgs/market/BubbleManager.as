@@ -35,9 +35,14 @@ package com.rgs.market
 		private var timeOut : int;
 		
 		private var origin : Point;
-		private var leftBubble : WordBubble;
-		private var rightBubble : WordBubble;
-		private var currentSide : WordBubble;
+		
+//		private var leftBubble : WordBubble;
+//		private var rightBubble : WordBubble;
+//		private var currentSide : WordBubble;
+		
+		private var box1 : WordBox;
+		private var box2 : WordBox;
+		private var currentSide : WordBox;
 		
 		public var showEnded : Signal;
 				
@@ -54,20 +59,33 @@ package com.rgs.market
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
-			leftBubble = new WordBubble( { x:stage.stageWidth * .5 - 50, y:30, 
-				offsetX:-50, offsetY:300, width:480, height:125, cornerRadius:20,
-				strokeWidth:6, strokeColor:0x333333, fillColor:0xFFFFFF, fillAlpha: .8, neck:2	} );
+//			leftBubble = new WordBubble( { x:stage.stageWidth * .5 - 50, y:30, 
+//				offsetX:-50, offsetY:300, width:480, height:125, cornerRadius:20,
+//				strokeWidth:6, strokeColor:0x333333, fillColor:0xFFFFFF, fillAlpha: .8, neck:2	} );
+//			
+//			rightBubble = new WordBubble( { x:stage.stageWidth * .5 + 50, y:30, 
+//				offsetX:50, offsetY:400, width:480, height:125, cornerRadius:20,
+//				strokeWidth:6, strokeColor:0x333333, fillColor:0xFFFFFF, fillAlpha: .8, neck:2	} );
 			
-			rightBubble = new WordBubble( { x:stage.stageWidth * .5 + 50, y:30, 
-				offsetX:50, offsetY:400, width:480, height:125, cornerRadius:20,
-				strokeWidth:6, strokeColor:0x333333, fillColor:0xFFFFFF, fillAlpha: .8, neck:2	} );
+			box1 = new WordBox( { x:stage.stageWidth * .5 - 50, y:30, 
+				offsetX:-50, offsetY:0, width:500, height:135, cornerRadius:20,
+				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
+			
+			box2 = new WordBox( { x:stage.stageWidth * .5 + 50, y:30, 
+				offsetX:50, offsetY:0, width:500, height:135, cornerRadius:20,
+				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
 			
 			
-			addChild(leftBubble);
-			addChild(rightBubble);
+//			addChild(leftBubble);
+//			addChild(rightBubble);
 			
-			leftBubble.alpha = 0;
-			rightBubble.alpha = 0;
+//			leftBubble.alpha = 0;
+//			rightBubble.alpha = 0;
+			
+			addChild(box1);
+			addChild(box2);
+			box1.alpha = 0;
+			box2.alpha = 0;
 			
 			FontLibrary.getInstance();
 						
@@ -87,16 +105,18 @@ package com.rgs.market
 			
 		}
 		
-		private function showNextLine():void
+		private function showNextChunk():void
 		{
 			if (currentLine % 2 == 0)
 			{
-				currentSide = leftBubble;
+//				currentSide = leftBubble;
+				currentSide = box1;
 				
 			}
 			else
 			{
-				currentSide = rightBubble;
+//				currentSide = rightBubble;
+				currentSide = box2;
 			}
 			
 			currentSide.text = linesArray[currentLine];
@@ -117,27 +137,29 @@ package com.rgs.market
 			currentLine ++;
 			if (currentLine < linesArray.length)
 			{
-				showNextLine();
+				showNextChunk();
 			}
 			else
 			{
 				currentLine = 0;
-				TweenMax.delayedCall(Number(timing.pauseAfterLastLine), showNextLine);
+				TweenMax.delayedCall(Number(timing.pauseAfterLastLine), showNextChunk);
 			}
 		}
 		
 		public function startShow():void
 		{
 			currentLine = 0;
-			showNextLine();
+			showNextChunk();
 		}
 		
 		public function endShow():void
 		{
 			KeyboardManager.getInstance().enabled = false;
 			TweenMax.killAll();
-			TweenMax.to(leftBubble, .5, { alpha: 0 });
-			TweenMax.to(rightBubble, .5, { alpha: 0 });
+//			TweenMax.to(leftBubble, .5, { alpha: 0 });
+//			TweenMax.to(rightBubble, .5, { alpha: 0 });
+			TweenMax.to(box1, .5, { alpha: 0 });
+			TweenMax.to(box2, .5, { alpha: 0 });
 			TweenMax.delayedCall(.5, function():void 
 			{ 
 				showEnded.dispatch();
@@ -148,13 +170,13 @@ package com.rgs.market
 		public function set poemText(value:String):void
 		{
 			poem = value;
-			poem = poem.split("\n\n").join("\n");
+			//poem = poem.split("\n\n").join("\n");
 			poem = poem.split("\\n").join("");
 			poem = poem.split("'").join("’");
 			
 			poemField.text = poem;
 			
-			linesArray = poemField.text.split("\r");
+			linesArray = poemField.text.split("\r\r");
 			
 		}
 		

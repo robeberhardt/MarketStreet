@@ -16,6 +16,9 @@ package com.rgs.market.fonts
 		[Embed(source="../../../../../assets/fonts/FuturaStd-Bold.otf", fontName="Futura Bold", fontWeight = "bold", mimeType="application/x-font-opentype")]
 		private static var FuturaBold : Class;
 		
+		[Embed(source="../../../../../assets/fonts/acmesa.ttf", fontName="A.C.M.E. Secret Agent", mimeType="application/x-font-truetype")]
+		private static var ACMESecretAgent : Class;
+		
 		private static var instance					: FontLibrary;
 		private static var allowInstantiation		: Boolean;
 		
@@ -23,6 +26,7 @@ package com.rgs.market.fonts
 		public static const FUTURA_BOLD				: String = "Futura Bold";
 		public static const FUTURA_BOOK				: String = "Futura Book";
 		public static const FUTURA_MEDIUM			: String = "Futura Medium";
+		public static const ACME_SECRET_AGENT		: String = "A.C.M.E. Secret Agent";
 		
 		public function FontLibrary(name:String = "FontLibrary") 
 		{
