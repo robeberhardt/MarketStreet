@@ -3,6 +3,7 @@
 		<username>marketstreetproject@gmail.com</username>
 		<password>artery321</password>
 		<calendarName>projection</calendarName>
+		<remoteSettingsDate>11/14/2010</remoteSettingsDate>
 	</account>
 	<poem>
 		<!--
@@ -10,7 +11,7 @@
 			or you can put in an explicit date in MM/DD/YYYY format
 			i.e. '08/20/1964' and we'll try to find a poem for that date
 		-->
-		<startDate>11/20/2010</startDate>
+		<startDate>today</startDate>
 		<dateCheckInterval>5000</dateCheckInterval>
 		<prefix><![CDATA[>  ]]></prefix>
 	</poem>

@@ -17,6 +17,7 @@
 			import com.rgs.market.DateBug;
 			import com.rgs.market.KeyboardManager;
 			import com.rgs.market.PoemRetriever;
+			import com.rgs.market.RemoteSettings;
 			import com.rgs.market.VideoLooper;
 			
 			import flash.display.LoaderInfo;
@@ -27,6 +28,8 @@
 			
 			private var settingsLoader : XMLLoader;
 			private var settings : XML;
+			
+			private var remote : RemoteSettings;
 			
 			private var todaysPoem : String;
 			private var bm : BubbleManager;
@@ -39,6 +42,8 @@
 			private var poemDate : Date;
 			
 			private var loadTimer : Timer;
+			private var lastDay : Number;
+			private var nowDay : Number;
 			
 			private function init():void
 			{
@@ -68,20 +73,49 @@
 			{
 				settings = settingsLoader.content;
 				
-				
-				
-				if (settings.poem.startDate.toString() == "today")
+				remote = new RemoteSettings(settings);
+				remote.remoteDateSignal.addOnce(onRemoteDateLoaded);
+						
+			}
+			
+			private function onRemoteDateLoaded(s:String):void
+			{
+				var remoteDateString:String = s.toLowerCase();
+				MonsterDebugger.trace(this, "remoteDateString");
+				MonsterDebugger.trace(this, remoteDateString);
+				switch (remoteDateString)
 				{
-					poemDate = new Date();
-					poemDate.seconds = 0;
-					poemDate.minutes = 0;
-					poemDate.hours = 0;
-					poemDate.milliseconds = 0;
+					case "fail" :
+						if (settings.poem.startDate.toString() == "today")
+						{
+							poemDate = new Date();
+							poemDate.seconds = 0;
+							poemDate.minutes = 0;
+							poemDate.hours = 0;
+							poemDate.milliseconds = 0;
+						}
+						else
+						{
+							poemDate = new Date(settings.poem.startDate.toString());
+						}
+						break;
+					
+					case "today" :
+						MonsterDebugger.trace(this, "setting date to TODAY");
+						poemDate = new Date();
+						poemDate.seconds = 0;
+						poemDate.minutes = 0;
+						poemDate.hours = 0;
+						poemDate.milliseconds = 0;
+						break;
+					
+					default :
+						MonsterDebugger.trace(this, "setting date to " + remoteDateString);
+						poemDate = new Date(remoteDateString);
+						break;
 				}
-				else
-				{
-					poemDate = new Date(settings.poem.startDate.toString());
-				}
+			
+				lastDay = poemDate.date;
 				
 				var interval:Number = Number(settings.poem.dateCheckInterval);
 				MonsterDebugger.trace(this, "interval: " + interval);
@@ -89,12 +123,11 @@
 				loadTimer.addEventListener(TimerEvent.TIMER, onReloadInterval);
 				loadTimer.start();
 				
-				setupComponents();				
+				setupComponents();			
 			}
 			
 			private function setupComponents():void
 			{
-//				myPoemRetriever = new PoemRetriever(settings.account.username, settings.account.password, settings.account.calendarName);
 				myPoemRetriever = new PoemRetriever(settings);
 				myPoemRetriever.gotPoemFallback.add(onPoemFallback);
 				myPoemRetriever.gotPoemSignal.add(onPoemReceived);
@@ -115,9 +148,14 @@
 			private function onReloadInterval(e:TimerEvent):void
 			{
 				var nowDate:Date = new Date();
-				var nowDay:Number = nowDate.date;
-				MonsterDebugger.trace(this, "nowDate: " + nowDay);
-				//loadPoem(poemDate);
+				nowDay = nowDate.date;
+				if (!lastDay) { lastDay = nowDay; }
+				MonsterDebugger.trace(this, "nowDay: " + nowDay + ", lastDay: " + lastDay);
+				if (nowDay != lastDay)
+				{
+					loadPoem(nowDate);
+				}
+			
 			}
 			
 			private function loadPoem(date:Date):void
