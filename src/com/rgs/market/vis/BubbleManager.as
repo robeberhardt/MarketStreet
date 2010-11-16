@@ -35,7 +35,8 @@ package com.rgs.market.vis
 		
 		private var chunksArray : Array;
 
-		private var timing : XMLList;
+		private var timingSettings : XMLList;
+		private var boxesSettings : XMLList;
 		private var ticks : Number;
 		private var timeIn : int;
 		private var timeOut : int;
@@ -55,9 +56,10 @@ package com.rgs.market.vis
 		public var showInProgress : Boolean = false;
 		public var showEnded : Signal;
 				
-		public function BubbleManager(theSettings:XMLList)
+		public function BubbleManager(theSettings:XML)
 		{
-			timing = theSettings;
+			timingSettings = theSettings.timing;
+			boxesSettings = theSettings.boxes;
 			showEnded = new Signal();
 			if (stage) { init(); } else { addEventListener(Event.ADDED_TO_STAGE, init); }
 		}
@@ -67,13 +69,13 @@ package com.rgs.market.vis
 		private function init(e:Event=null):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-						
+									
 			box1 = new WordBox( { x:stage.stageWidth * .5 - 50, y:30, 
-				offsetX:-50, offsetY:0, width:500, height:135, cornerRadius:20,
+				offsetX:-50, offsetY:0,  maxWidth:Number(boxesSettings.maxWidth), maxHeight:Number(boxesSettings.maxHeight), cornerRadius:20,
 				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
 			
 			box2 = new WordBox( { x:stage.stageWidth * .5 + 50, y:30, 
-				offsetX:50, offsetY:0, width:500, height:135, cornerRadius:20,
+				offsetX:50, offsetY:0, maxWidth:Number(boxesSettings.maxWidth), maxHeight:Number(boxesSettings.maxHeight), cornerRadius:20,
 				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
 			
 			addChild(box1);
@@ -96,8 +98,8 @@ package com.rgs.market.vis
 			
 			chunksArray = new Array();
 			
-			timeIn = Number(timing.lineIn);
-			timeOut = Number(timing.lineOut);
+			timeIn = Number(timingSettings.lineIn);
+			timeOut = Number(timingSettings.lineOut);
 						
 			
 		}
@@ -121,7 +123,7 @@ package com.rgs.market.vis
 				
 				TweenMax.delayedCall(timeOut, function():void { 
 					box1.text = chunksArray[currentChunkIndex];
-					ticks = 1 + Number(timing.speed)*box1.text.length / 10;
+					ticks = 1 + Number(timingSettings.speed)*box1.text.length / 10;
 					
 //					box1.x = stage.stageWidth * .5 + 50;
 					box1.x = stage.stageWidth * .5 - 100;
@@ -144,7 +146,7 @@ package com.rgs.market.vis
 			else
 			{
 				box2.text = chunksArray[currentChunkIndex];
-				ticks = 1 + Number(timing.speed)*box2.text.length / 10;
+				ticks = 1 + Number(timingSettings.speed)*box2.text.length / 10;
 				
 				if (Math.random() < .5)
 				{
@@ -155,7 +157,7 @@ package com.rgs.market.vis
 					box2.x = box1.x + 50;
 				}
 				
-				box2.y = box1.y + box1.height + 30;
+				box2.y = box1.y + box1.height + 30 + (Math.random()*30);
 				
 				
 				if (currentChunkIndex < chunksArray.length-1)
@@ -187,7 +189,7 @@ package com.rgs.market.vis
 				TweenMax.delayedCall(4, function():void {  
 					TweenMax.to(box1, timeOut, { alpha: 0 });
 					TweenMax.to(box2, timeOut, { alpha: 0 });
-					TweenMax.delayedCall(Number(timing.pauseAfterLastLine), showNextChunk);
+					TweenMax.delayedCall(Number(timingSettings.pauseAfterLastLine), showNextChunk);
 				});
 			}
 		}

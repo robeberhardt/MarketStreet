@@ -21,6 +21,7 @@
 			import com.rgs.market.debug.KeyboardManager;
 			import com.rgs.market.vis.Bubble;
 			import com.rgs.market.vis.BubbleManager;
+			import com.rgs.market.vis.DateBugTwo;
 			import com.rgs.market.vis.VideoLooper;
 			import com.rgs.utils.monster.Monster;
 			
@@ -39,6 +40,7 @@
 			private var bm : BubbleManager;
 			private var debugger : MonsterDebugger;
 			private var dateBug : DateBug;
+			private var db2 : DateBugTwo;
 			
 			private var fallbackPoem : PoemData;
 			
@@ -125,23 +127,10 @@
 			{
 				Monster.info(this, "got data: ");
 				Monster.info(this, poemData);
-//				bm.poemText = settings.poem.prefix.toString() + poemData.poem;
+				videoLooper.load(dateChecker.nowDate);
 				bm.poemData = poemData;
 				bm.startShow();
-				
-//				if (bm.showInProgress)
-//				{
-//					bm.showEnded.addOnce( function():void
-//					{
-//						bm.startShow();
-//					});
-//					bm.endShow();
-//				}
-//				else
-//				{
-//					bm.startShow();
-//				}
-				
+				dateBug.show();	
 			}
 			
 			private function onDataError(errorData:ErrorData):void
@@ -149,14 +138,17 @@
 				Monster.error(this, "ERRORRRRR");
 				Monster.error(this, errorData);
 				bm.poemData = fallbackPoem;
+				bm.startShow();
 			}
 			
 			private function onDateChanged(now:Date):void
 			{
+				//Monster.clear();
 				Monster.info(this, "date changed: now = " + now);
 				dateBug.text = now;
-				videoLooper.load(now);
-//				dataRetriever.getDataForLocalDate(now);
+				
+			
+				Monster.info(this, "dateBug Alpha = " + dateBug.alpha);
 				
 				if (bm.showInProgress)
 				{
@@ -213,8 +205,15 @@
 				dateBug = new DateBug();
 				this.stage.addChild(dateBug);
 				
-				bm = new BubbleManager(settings.timing);
+				
+				
+				bm = new BubbleManager(settings);
 				this.stage.addChild(bm);
+				
+//				db2 = new DateBugTwo();
+//				this.stage.addChild(db2);
+//				db2.x = 500;
+//				db2.y = 250;
 				
 				setupKeyboardManager();
 			}
@@ -239,6 +238,7 @@
 				KeyboardManager.getInstance().loadSignal.add(onLoadKey);
 				KeyboardManager.getInstance().previousSignal.add(onPreviousKey);
 				KeyboardManager.getInstance().nextSignal.add(onNextKey);
+				//KeyboardManager.getInstance().wtfSignal.add(onWTFKey);
 
 			}
 			
@@ -273,6 +273,12 @@
 			private function onPreviousKey():void
 			{
 				dateChecker.decrementFakeDate();
+			}
+			
+			private function onWTFKey():void
+			{
+				db2.show();
+				dateBug.show();
 			}
 //			
 //			private function onNextKey():void

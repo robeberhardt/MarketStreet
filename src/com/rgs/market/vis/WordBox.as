@@ -50,7 +50,7 @@ package com.rgs.market.vis
 			field.multiline = true;
 			field.embedFonts = true;
 			field.selectable = false;
-			field.width = 650;
+			field.width = maxWidth;
 			field.alpha = 1;
 			field.border = false;
 			field.borderColor = 0xFF0000;
@@ -65,7 +65,7 @@ package com.rgs.market.vis
 			lineTestField.multiline = true;
 			lineTestField.embedFonts = true;
 			lineTestField.selectable = false;
-			lineTestField.width = 650;
+			lineTestField.width = maxWidth;
 			lineTestField.alpha = 1;
 			lineTestField.border = false;
 			lineTestField.borderColor = 0xFF0000;
@@ -105,7 +105,7 @@ package com.rgs.market.vis
 			
 			
 			
-			while(field.textHeight > 150)
+			while(field.textHeight > (maxHeight + 15))
 			{
 				format.size = Number(format.size) - 1;
 				field.setTextFormat(format);
@@ -132,7 +132,8 @@ package com.rgs.market.vis
 			field.x = textCorner.x;
 			field.y = textCorner.y;
 			
-			height = field.height + 14;
+			width = field.textWidth+ 24;
+			height = field.textHeight + 14;
 			draw();
 			triangle.x = 50 + (Math.random()*(width-100));
 			triangle.y = height;

@@ -17,6 +17,7 @@ package com.rgs.market.debug
 		public var loadSignal							: Signal;
 		public var nextSignal							: Signal;
 		public var previousSignal						: Signal;
+		public var wtfSignal							: Signal;
 		
 		private var _enabled							: Boolean;
 		
@@ -30,6 +31,7 @@ package com.rgs.market.debug
 				nextSignal = new Signal();
 				loadSignal = new Signal();
 				previousSignal = new Signal();
+				wtfSignal = new Signal();
 				
 				_enabled = true;
 				
@@ -74,6 +76,10 @@ package com.rgs.market.debug
 					
 					case 80  : // P - PREVIOUS POEM
 						previousSignal.dispatch();
+						break;
+					
+					case 87  : // W - WTF
+						wtfSignal.dispatch();
 						break;
 					
 					default :

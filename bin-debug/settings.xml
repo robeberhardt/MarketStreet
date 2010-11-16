@@ -5,7 +5,7 @@
 		<calendarName>projection</calendarName>
 		<remoteSettingsDate>11/14/2010</remoteSettingsDate>
 		<prefix><![CDATA[>  ]]></prefix>
-		<suffix><![CDATA[  !]]></suffix>
+		<suffix><![CDATA[ :::]]></suffix>
 		<startDate>today</startDate>
 	</data>
 	<poem>
@@ -17,6 +17,10 @@
 		
 		<dateCheckInterval>5000</dateCheckInterval>
 	</poem>
+	<boxes>
+		<maxWidth>650</maxWidth>
+		<maxHeight>180</maxHeight>
+	</boxes>
 	<videos>
 		<video id="sunday" xpos="0" ypos="0">
 			<url>assets/neon2_small.flv</url>

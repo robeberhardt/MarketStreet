@@ -15,6 +15,8 @@ package com.rgs.market.vis
 		private var _offsetY				: Number;
 		private var _width					: Number;
 		private var _height					: Number;
+		private var _maxHeight				: Number;
+		private var _maxWidth				: Number;
 		private var _cornerRadius			: Number;
 		private var _strokeWidth			: Number;
 		private var _strokeColor			: Number;
@@ -33,6 +35,8 @@ package com.rgs.market.vis
 			_offsetY = (this.vars.offsetY) ? Number(this.vars.offsetY) : 30;
 			_width = (this.vars.width) ? Number(this.vars.width) : 200;
 			_height = (this.vars.height) ? Number(this.vars.height) : 60;
+			_maxWidth = (this.vars.maxWidth) ? Number(this.vars.maxWidth) : 650;
+			_maxHeight = (this.vars.maxHeight) ? Number(this.vars.maxHeight) : 160;
 			_cornerRadius = (this.vars.cornerRadius) ? Number(this.vars.cornerRadius) : 10;
 			_strokeWidth = (this.vars.strokeWidth != null) ? Number(this.vars.strokeWidth) : 2;
 			_strokeColor = (this.vars.strokeColor != null) ? Number(this.vars.strokeColor) : 0x333333;
@@ -193,6 +197,26 @@ package com.rgs.market.vis
 		{
 			_fillAlpha = value;
 			draw();
+		}
+
+		public function get maxWidth():Number
+		{
+			return _maxWidth;
+		}
+
+		public function set maxWidth(value:Number):void
+		{
+			_maxWidth = value;
+		}
+
+		public function get maxHeight():Number
+		{
+			return _maxHeight;
+		}
+
+		public function set maxHeight(value:Number):void
+		{
+			_maxHeight = value;
 		}
 		
 		

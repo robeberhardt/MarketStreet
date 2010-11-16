@@ -15,7 +15,8 @@ package com.rgs.market.calendar
 		public var dateChangedSignal : Signal;
 		
 		private var startDate : Date;
-		private var nowDate : Date;
+		public var nowDate : Date;
+		private var testDate : Date;
 		
 		public function DateChecker()
 		{	
@@ -23,8 +24,8 @@ package com.rgs.market.calendar
 			dateChangedSignal = new Signal(Date);
 			
 			checkTimer = new Timer(10000);
-//			checkTimer.addEventListener(TimerEvent.TIMER, onTimer);
-			checkTimer.addEventListener(TimerEvent.TIMER, onTimerFake);
+			checkTimer.addEventListener(TimerEvent.TIMER, onTimer);
+//			checkTimer.addEventListener(TimerEvent.TIMER, onTimerFake);
 		}
 		
 		public function start(startDate:Date):void
@@ -33,7 +34,7 @@ package com.rgs.market.calendar
 			this.startDate = startDate;
 			nowDate = startDate;
 			dateChangedSignal.dispatch(startDate);
-			//checkTimer.start();
+			checkTimer.start();
 		}
 		
 		public function stop():void
@@ -43,8 +44,14 @@ package com.rgs.market.calendar
 		
 		private function onTimer(e:TimerEvent):void
 		{
-			nowDate = new Date();
-			dateChangedSignal.dispatch(nowDate);
+			Monster.debug(this, "checking date...");
+			testDate = new Date();
+			if (testDate.date != nowDate.date)
+			{
+				Monster.debug(this, "DATE HAS CHANGED!!!");
+				nowDate = testDate;
+				dateChangedSignal.dispatch(nowDate);
+			}
 		}
 		
 		private function onTimerFake(e:TimerEvent):void

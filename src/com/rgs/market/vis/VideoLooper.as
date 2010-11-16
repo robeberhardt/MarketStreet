@@ -41,8 +41,10 @@ package com.rgs.market.vis
 				
 		public function load(d:Date):void
 		{
+			Monster.debug(this, "wtf");
 			hideComplete.addOnce(function():void
 			{
+				Monster.debug(this, "loading " + d.date);
 				loader.unload();
 				videoData = settings.video[d.day];
 				Monster.info(this, videoData);
@@ -59,16 +61,17 @@ package com.rgs.market.vis
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			request = new URLRequest();
+			request.url = "http://www.google.com";
 			
 			vars = new VideoLoaderVars();
-			vars.name = "video";
-			vars.container = this;
-			vars.width = 1280;
-			vars.height = 720;
-			vars.repeat = -1;
+			vars.name("video");
+			vars.container(this);
+			vars.width(1280);
+			vars.height(720);
+			vars.repeat(-1);
 			//if (loop) { vars.repeat = -1; } else { vars.repeat = 0; }
-			vars.onComplete = onComplete;
-			vars.onFail = onFail;
+			vars.onComplete(onComplete);
+			vars.onFail(onFail);
 			
 			loader = new VideoLoader(request, vars);
 			
@@ -76,7 +79,19 @@ package com.rgs.market.vis
 		
 		public function hide():void
 		{
-			TweenMax.to(this, 1, { autoAlpha: 0, onComplete:function():void { hideComplete.dispatch(); } });
+			Monster.debug(this, "hiding");
+			TweenMax.to(this, 1, { autoAlpha: 0, onUpdate: sendHideUpdate, onComplete: sendHideCompleteSignal } );
+		}
+		
+		private function sendHideUpdate():void
+		{
+			//Monster.debug(this, "hiding update");
+		}
+		
+		public function sendHideCompleteSignal():void
+		{
+			Monster.debug(this, "seinding hide complete signal");
+			hideComplete.dispatch();
 		}
 		
 		public function show():void

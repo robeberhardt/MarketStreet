@@ -70,7 +70,7 @@ package com.rgs.market.calendar
 			poemData = new PoemData();
 			errorData = new ErrorData();
 			
-			timeoutTimer = new Timer(20000);
+			timeoutTimer = new Timer(30000);
 			timeoutTimer.addEventListener(TimerEvent.TIMER, onTimeout);
 		}
 		
