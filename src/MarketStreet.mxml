@@ -19,6 +19,7 @@
 			import com.rgs.market.calendar.RemoteSettings;
 			import com.rgs.market.debug.DateBug;
 			import com.rgs.market.debug.KeyboardManager;
+			import com.rgs.market.vis.AuthorBug;
 			import com.rgs.market.vis.Bubble;
 			import com.rgs.market.vis.BubbleManager;
 			import com.rgs.market.vis.DateBugTwo;
@@ -40,6 +41,7 @@
 			private var bm : BubbleManager;
 			private var debugger : MonsterDebugger;
 			private var dateBug : DateBug;
+			private var authorBug : AuthorBug;
 			private var db2 : DateBugTwo;
 			
 			private var fallbackPoem : PoemData;
@@ -79,7 +81,7 @@
 				
 				if (stage) { onAddedToStage(); } else { addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); }
 				
-				dateChecker = new DateChecker();
+				dateChecker = new DateChecker(Number(settings.data.dateCheckInterval));
 				dateChecker.dateChangedSignal.add(onDateChanged);
 				
 				dataRetriever = new DataRetriever(settings.data);
@@ -129,6 +131,7 @@
 				Monster.info(this, poemData);
 				videoLooper.load(dateChecker.nowDate);
 				bm.poemData = poemData;
+				authorBug.text = poemData.title + "  -  " + poemData.author;
 				bm.startShow();
 				dateBug.show();	
 			}
@@ -205,6 +208,8 @@
 				dateBug = new DateBug();
 				this.stage.addChild(dateBug);
 				
+				authorBug = new AuthorBug();
+				this.stage.addChild(authorBug);
 				
 				
 				bm = new BubbleManager(settings);

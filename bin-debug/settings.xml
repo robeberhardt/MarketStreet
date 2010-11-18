@@ -7,16 +7,8 @@
 		<prefix><![CDATA[>  ]]></prefix>
 		<suffix><![CDATA[ :::]]></suffix>
 		<startDate>today</startDate>
+		<dateCheckInterval>60</dateCheckInterval>
 	</data>
-	<poem>
-		<!--
-			You can put 'today' in here and we'll grab the poem for today
-			or you can put in an explicit date in MM/DD/YYYY format
-			i.e. '08/20/1964' and we'll try to find a poem for that date
-		-->
-		
-		<dateCheckInterval>5000</dateCheckInterval>
-	</poem>
 	<boxes>
 		<maxWidth>650</maxWidth>
 		<maxHeight>180</maxHeight>

@@ -171,6 +171,7 @@ package com.rgs.market.calendar
 				{
 					poemData.poem = data.prefix + ev.content.content + data.suffix;
 					poemData.author = ev.where[0].valueString;
+					poemData.title = ev.title.title.toString();
 				}
 				
 				loadedSignal.dispatch(poemData);

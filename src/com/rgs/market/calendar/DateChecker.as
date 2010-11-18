@@ -18,12 +18,12 @@ package com.rgs.market.calendar
 		public var nowDate : Date;
 		private var testDate : Date;
 		
-		public function DateChecker()
+		public function DateChecker(interval:Number)
 		{	
 			
 			dateChangedSignal = new Signal(Date);
 			
-			checkTimer = new Timer(10000);
+			checkTimer = new Timer(interval*1000);
 			checkTimer.addEventListener(TimerEvent.TIMER, onTimer);
 //			checkTimer.addEventListener(TimerEvent.TIMER, onTimerFake);
 		}

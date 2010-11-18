@@ -1,10 +1,11 @@
-package com.rgs.market.debug
+package com.rgs.market.vis
 {
 	import com.greensock.TweenMax;
 	import com.rgs.market.fonts.FontLibrary;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.filters.DropShadowFilter;
 	import flash.text.AntiAliasType;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -34,26 +35,27 @@ package com.rgs.market.debug
 			
 			format = new TextFormat();
 			format.letterSpacing = 1;
-			format.size = 18;
-			format.leftMargin = 10;
-			format.rightMargin = 10;
+			format.size = 24;
+//			format.leftMargin = 10;
+//			format.rightMargin = 10;
 			format.color = 0xFFFFFF;
-			format.align = TextFormatAlign.RIGHT;
-			format.font = FontLibrary.FUTURA_MEDIUM;
+			format.align = TextFormatAlign.LEFT;
+			format.font = FontLibrary.ACME_SECRET_AGENT;
 			
 			field = new TextField();
 			field.antiAliasType = AntiAliasType.ADVANCED;
 			field.autoSize = TextFieldAutoSize.LEFT;
-			field.wordWrap = true;
-			field.multiline = true;
+			field.wordWrap = false;
+			field.multiline = false;
 			field.embedFonts = true;
 			field.selectable = false;
-			field.width = 300;
+			field.width = 500;
 			field.alpha = 1;
 			addChild(field);
 			
-			x = stage.stageWidth - 350;
 			y = stage.stageHeight - 50;
+			
+			this.filters = [new DropShadowFilter(0, 0, 0x000000, 1, 4, 4, 5, 5)];
 			
 		}
 		
@@ -61,17 +63,20 @@ package com.rgs.market.debug
 		{
 			field.text = s;
 			field.setTextFormat(format);
-			bg.graphics.clear();
-			bg.graphics.beginFill(0x000000, .5);
-			bg.graphics.drawRect(field.textWidth, -5, field.textWidth + 20, field.textHeight + 10);
-			bg.graphics.endFill();
+			x = stage.stageWidth - field.textWidth - 50;
 			show();
+			
+//			bg.graphics.clear();
+//			bg.graphics.beginFill(0x000000, .5);
+//			bg.graphics.drawRect(field.textWidth, -5, field.textWidth + 20, field.textHeight + 10);
+//			bg.graphics.endFill();
+			
 		}
 	
 		
 		public function show():void
 		{
-			TweenMax.to(this, 1, { autoAlpha: 1 } );
+			TweenMax.to(this, 1, { autoAlpha: 1 });
 		}
 		
 		public function hide():void
