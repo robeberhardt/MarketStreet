@@ -1,28 +1,45 @@
 <settings>
-	<account>
+	<data>
 		<username>marketstreetproject@gmail.com</username>
 		<password>artery321</password>
 		<calendarName>projection</calendarName>
 		<remoteSettingsDate>11/14/2010</remoteSettingsDate>
-	</account>
+		<prefix><![CDATA[>  ]]></prefix>
+		<suffix><![CDATA[  !]]></suffix>
+		<startDate>today</startDate>
+	</data>
 	<poem>
 		<!--
 			You can put 'today' in here and we'll grab the poem for today
 			or you can put in an explicit date in MM/DD/YYYY format
 			i.e. '08/20/1964' and we'll try to find a poem for that date
 		-->
-		<startDate>today</startDate>
+		
 		<dateCheckInterval>5000</dateCheckInterval>
-		<prefix><![CDATA[>  ]]></prefix>
 	</poem>
-	<video>
-		<url>assets/video.flv</url>
-		<width>1200</width>
-		<height>720</height>
-		<xpos>-200</xpos>
-		<ypos>0</ypos>
-		<loop>true</loop>
-	</video>
+	<videos>
+		<video id="sunday" xpos="0" ypos="0">
+			<url>assets/neon2_small.flv</url>
+		</video>
+		<video id="monday" xpos="-300" ypos="0">
+			<url>assets/legs.flv</url>
+		</video>
+		<video id="tuesday" xpos="0" ypos="0">
+			<url>assets/neon2_small.flv</url>
+		</video>
+		<video id="wednesday" xpos="-200" ypos="0">
+			<url>assets/legs.flv</url>
+		</video>
+		<video id="thursday" xpos="0" ypos="0">
+			<url>assets/neon2_small.flv</url>
+		</video>
+		<video id="friday" xpos="-100" ypos="0">
+			<url>assets/legs.flv</url>
+		</video>
+		<video id="saturday" xpos="0" ypos="0">
+			<url>assets/neon2_small.flv</url>
+		</video>
+	</videos>
 	<timing>
 		<lineIn>1</lineIn>
 		<lineOut>1</lineOut>
@@ -39,17 +56,20 @@
 			<date>08/20/2010</date>
 		</remote>
 		<local>
+			<poem>
 There was a young local named Mallory,
+
 who drew but a very small salary.
+
 When he went to the show,
 
 his wallet made him go
+
 to a seat in the uppermost gallery.
-
-There was a young local named Mallory,
-who drew but a very small salary.
-When he went to the show,
-
+			</poem>
+			<author>
+anonymous
+			</author>
 		</local>
 	</fallback>
 </settings>

@@ -1,8 +1,11 @@
-package com.rgs.market
+package com.rgs.market.vis
 {
 	import com.greensock.TweenMax;
 	import com.greensock.text.SplitTextField;
+	import com.rgs.market.calendar.PoemData;
+	import com.rgs.market.debug.KeyboardManager;
 	import com.rgs.market.fonts.FontLibrary;
+	import com.rgs.utils.monster.Monster;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -26,7 +29,8 @@ package com.rgs.market
 		private var rightField : TextField;
 		private var lineFormat : TextFormat;
 		
-
+		private var _poemData : PoemData;
+		
 		private var chunksArray : Array;
 
 		private var timing : XMLList;
@@ -60,15 +64,7 @@ package com.rgs.market
 		private function init(e:Event=null):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			
-//			leftBubble = new WordBubble( { x:stage.stageWidth * .5 - 50, y:30, 
-//				offsetX:-50, offsetY:300, width:480, height:125, cornerRadius:20,
-//				strokeWidth:6, strokeColor:0x333333, fillColor:0xFFFFFF, fillAlpha: .8, neck:2	} );
-//			
-//			rightBubble = new WordBubble( { x:stage.stageWidth * .5 + 50, y:30, 
-//				offsetX:50, offsetY:400, width:480, height:125, cornerRadius:20,
-//				strokeWidth:6, strokeColor:0x333333, fillColor:0xFFFFFF, fillAlpha: .8, neck:2	} );
-			
+						
 			box1 = new WordBox( { x:stage.stageWidth * .5 - 50, y:30, 
 				offsetX:-50, offsetY:0, width:500, height:135, cornerRadius:20,
 				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
@@ -76,13 +72,6 @@ package com.rgs.market
 			box2 = new WordBox( { x:stage.stageWidth * .5 + 50, y:30, 
 				offsetX:50, offsetY:0, width:500, height:135, cornerRadius:20,
 				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
-			
-			
-//			addChild(leftBubble);
-//			addChild(rightBubble);
-			
-//			leftBubble.alpha = 0;
-//			rightBubble.alpha = 0;
 			
 			addChild(box1);
 			addChild(box2);
@@ -233,5 +222,18 @@ package com.rgs.market
 			scaleX = stage.stageWidth / 1280;
 			scaleY = stage.stageHeight / 800;
 		}
+
+		public function get poemData():PoemData
+		{
+			return _poemData;
+		}
+
+		public function set poemData(value:PoemData):void
+		{
+			_poemData = value;
+			Monster.info(this, _poemData.poem);
+			Monster.info(this, _poemData.author);
+		}
+
 	}
 }

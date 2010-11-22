@@ -1,4 +1,4 @@
-package com.rgs.market
+package com.rgs.market.debug
 {
 	import com.greensock.TweenMax;
 	import com.rgs.market.fonts.FontLibrary;
@@ -15,6 +15,7 @@ package com.rgs.market
 	{
 		private var format : TextFormat;
 		private var field : TextField;
+		private var bg	: Sprite;
 		
 		public function DateBug()
 		{
@@ -24,6 +25,12 @@ package com.rgs.market
 		public function init(e:Event=null):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
+			alpha = 0;
+			visible = false;
+			
+			bg = new Sprite();
+			addChild(bg);
 			
 			format = new TextFormat();
 			format.letterSpacing = 1;
@@ -54,6 +61,10 @@ package com.rgs.market
 		{
 			field.text = textForDate(d);
 			field.setTextFormat(format);
+			bg.graphics.clear();
+			bg.graphics.beginFill(0x000000, .5);
+			bg.graphics.drawRect(field.textWidth, -5, field.textWidth + 20, field.textHeight + 10);
+			bg.graphics.endFill();
 			show();
 		}
 		

@@ -1,4 +1,4 @@
-package com.rgs.market
+package com.rgs.market.vis
 {
 	import com.gskinner.StringUtils;
 	import com.rgs.market.fonts.FontLibrary;
@@ -40,7 +40,7 @@ package com.rgs.market
 			format.color = 0xffffff;
 			//			format.align = TextFormatAlign.CENTER;
 			format.align = TextFormatAlign.LEFT;
-			format.font = FontLibrary.ACME_SECRET_AGENT;
+			format.font = FontLibrary.ACME_SECRET_AGENT_BOLD;
 			
 			field = new TextField();
 			field.antiAliasType = AntiAliasType.ADVANCED;

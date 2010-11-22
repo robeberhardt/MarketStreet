@@ -1,4 +1,4 @@
-package com.rgs.market
+package com.rgs.market.debug
 {
 	import flash.display.Sprite;
 	import flash.events.Event;

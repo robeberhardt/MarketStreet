@@ -16,8 +16,11 @@ package com.rgs.market.fonts
 		[Embed(source="../../../../../assets/fonts/FuturaStd-Bold.otf", fontName="Futura Bold", fontWeight = "bold", mimeType="application/x-font-opentype")]
 		private static var FuturaBold : Class;
 		
-		[Embed(source="../../../../../assets/fonts/acmesa.ttf", fontName="A.C.M.E. Secret Agent", mimeType="application/x-font-truetype")]
+		[Embed(source="../../../../../assets/fonts/acmesa.ttf", fontName="A.C.M.E. Secret Agent", fontWeight = "normal", mimeType="application/x-font-truetype")]
 		private static var ACMESecretAgent : Class;
+		
+		[Embed(source="../../../../../assets/fonts/acmesa-new.ttf", fontName="A.C.M.E. Secret Agent Bold", fontWeight = "bold", mimeType="application/x-font-truetype")]
+		private static var ACMESecretAgentBold : Class;
 		
 		private static var instance					: FontLibrary;
 		private static var allowInstantiation		: Boolean;
@@ -26,7 +29,8 @@ package com.rgs.market.fonts
 		public static const FUTURA_BOLD				: String = "Futura Bold";
 		public static const FUTURA_BOOK				: String = "Futura Book";
 		public static const FUTURA_MEDIUM			: String = "Futura Medium";
-		public static const ACME_SECRET_AGENT		: String = "A.C.M.E. Secret Agent";
+		public static const ACME_SECRET_AGENT		: String = "A.C.M.E. Secret Agent";	
+		public static const ACME_SECRET_AGENT_BOLD	: String = "A.C.M.E. Secret Agent Bold";
 		
 		public function FontLibrary(name:String = "FontLibrary") 
 		{

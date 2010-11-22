@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" width="1280" height="800" frameRate="30" backgroundColor="#000000" creationComplete="init()">
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="1280" height="720" frameRate="30" backgroundColor="#000000" creationComplete="init()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -12,13 +12,17 @@
 			import com.greensock.easing.Quad;
 			import com.greensock.events.LoaderEvent;
 			import com.greensock.loading.XMLLoader;
-			import com.rgs.market.Bubble;
-			import com.rgs.market.BubbleManager;
-			import com.rgs.market.DateBug;
-			import com.rgs.market.KeyboardManager;
-			import com.rgs.market.PoemRetriever;
-			import com.rgs.market.RemoteSettings;
-			import com.rgs.market.VideoLooper;
+			import com.rgs.market.calendar.DataRetriever;
+			import com.rgs.market.calendar.DateChecker;
+			import com.rgs.market.calendar.ErrorData;
+			import com.rgs.market.calendar.PoemData;
+			import com.rgs.market.calendar.RemoteSettings;
+			import com.rgs.market.debug.DateBug;
+			import com.rgs.market.debug.KeyboardManager;
+			import com.rgs.market.vis.Bubble;
+			import com.rgs.market.vis.BubbleManager;
+			import com.rgs.market.vis.VideoLooper;
+			import com.rgs.utils.monster.Monster;
 			
 			import flash.display.LoaderInfo;
 			
@@ -33,150 +37,165 @@
 			
 			private var todaysPoem : String;
 			private var bm : BubbleManager;
-			private var myPoemRetriever : PoemRetriever;
 			private var debugger : MonsterDebugger;
 			private var dateBug : DateBug;
 			
-			private var loop : VideoLooper;
+			private var fallbackPoem : PoemData;
 			
-			private var poemDate : Date;
+			private var dateChecker : DateChecker;
+			
+			private var dataRetriever : DataRetriever;
+			
+			private var videoLooper : VideoLooper;
+			
+			private var startDate : Date;
 			
 			private var loadTimer : Timer;
 			private var lastDay : Number;
 			private var nowDay : Number;
 			
+			private var errorCount : int = 0;
+			
 			private function init():void
 			{
 				debugger = new MonsterDebugger(this);
-				MonsterDebugger.clearTraces();
 				
-				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-				
+				Monster.enableAllLevels();
+				Monster.clear();
+			
 				settingsLoader = new XMLLoader("settings.xml", { onComplete: onSettingsLoaded });
 				settingsLoader.load();
-			}
-			
-			private function onAddedToStage(e:Event):void
-			{
-				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);				
-				this.stage.addEventListener(Event.RESIZE, onResize);
-			}
-			
-			private function onResize(e:Event):void
-			{
-				if (loop) { loop.resize(); }
-				if (bm) { bm.resize(); }
-				if (dateBug) { dateBug.resize(); }
 			}
 			
 			private function onSettingsLoaded(e:LoaderEvent):void
 			{
 				settings = settingsLoader.content;
 				
-				remote = new RemoteSettings(settings);
-				remote.remoteDateSignal.addOnce(onRemoteDateLoaded);
+				fallbackPoem = new PoemData();
+				fallbackPoem.poem = settings.fallback.local.poem;
+				fallbackPoem.author = settings.fallback.local.author;
+				
+				if (stage) { onAddedToStage(); } else { addEventListener(Event.ADDED_TO_STAGE, onAddedToStage); }
+				
+				dateChecker = new DateChecker();
+				dateChecker.dateChangedSignal.add(onDateChanged);
+				
+				dataRetriever = new DataRetriever(settings.data);
+				dataRetriever.loadedSignal.addOnce(onRemoteDateLoaded);
+				dataRetriever.errorSignal.addOnce(onRemoteDateError);
+				dataRetriever.getDataForRemoteDate(new Date(settings.data.remoteSettingsDate.toString()));
 						
 			}
 			
-			private function onRemoteDateLoaded(s:String):void
+			private function onRemoteDateError(errorData:ErrorData):void
 			{
-				var remoteDateString:String = s.toLowerCase();
-				MonsterDebugger.trace(this, "remoteDateString");
-				MonsterDebugger.trace(this, remoteDateString);
-				switch (remoteDateString)
-				{
-					case "fail" :
-						if (settings.poem.startDate.toString() == "today")
-						{
-							poemDate = new Date();
-							poemDate.seconds = 0;
-							poemDate.minutes = 0;
-							poemDate.hours = 0;
-							poemDate.milliseconds = 0;
-						}
-						else
-						{
-							poemDate = new Date(settings.poem.startDate.toString());
-						}
-						break;
-					
-					case "today" :
-						MonsterDebugger.trace(this, "setting date to TODAY");
-						poemDate = new Date();
-						poemDate.seconds = 0;
-						poemDate.minutes = 0;
-						poemDate.hours = 0;
-						poemDate.milliseconds = 0;
-						break;
-					
-					default :
-						MonsterDebugger.trace(this, "setting date to " + remoteDateString);
-						poemDate = new Date(remoteDateString);
-						break;
-				}
+				Monster.error(this, "remoteDateError!");
+				Monster.error(this, errorData);
+				
+				addHandlersToDataRetriever();
+				
+				startDate = dateFromString(settings.data.startDate.toString());
+				dateChecker.start(startDate);
+			}
 			
-				lastDay = poemDate.date;
+			private function onRemoteDateLoaded(d:PoemData):void
+			{
+				var remoteDateString:String = d.poem.toLowerCase();
 				
-				var interval:Number = Number(settings.poem.dateCheckInterval);
-				MonsterDebugger.trace(this, "interval: " + interval);
-				loadTimer = new Timer(interval);
-				loadTimer.addEventListener(TimerEvent.TIMER, onReloadInterval);
-				loadTimer.start();
+				Monster.info(this, "got remote date string");
+				Monster.info(this, remoteDateString);
 				
-				setupComponents();			
+				addHandlersToDataRetriever();
+				
+				startDate = dateFromString(remoteDateString);
+				dateChecker.start(startDate);		
+			}
+			
+			private function addHandlersToDataRetriever():void
+			{
+				dataRetriever.errorSignal.removeAll();
+				dataRetriever.loadedSignal.removeAll();
+				dataRetriever.loadedSignal.add(onDataLoaded);
+				dataRetriever.errorSignal.add(onDataError);
+			}
+			
+			
+			
+			private function onDataLoaded(poemData:PoemData):void
+			{
+				Monster.info(this, "got data: ");
+				Monster.info(this, poemData);
+//				bm.poemText = settings.poem.prefix.toString() + poemData.poem;
+				bm.poemData = poemData;
+			}
+			
+			private function onDataError(errorData:ErrorData):void
+			{
+				Monster.error(this, "ERRORRRRR");
+				Monster.error(this, errorData);
+				bm.poemData = fallbackPoem;
+			}
+			
+			private function onDateChanged(now:Date):void
+			{
+				Monster.info(this, "date changed: now = " + now);
+				dateBug.text = now;
+				videoLooper.load(now);
+				dataRetriever.getDataForLocalDate(now);
+			}
+			
+			private function dateFromString(s:String):Date
+			{
+				var todayDate:Date = new Date();
+				todayDate.seconds = 0;
+				todayDate.minutes = 0;
+				todayDate.hours = 0;
+				todayDate.milliseconds = 0;
+				
+				if (s.toLowerCase() == "today") { return todayDate; }
+				else
+				{
+					var d:Date = new Date(s);
+					if (d.toString() == "Invalid Date") { return todayDate; }
+					else { return d; }
+				}
+			}
+		
+			
+			/* *****************************************************************************
+			*
+			*               STAGE / RESIZE STUFF
+			*
+			*/
+			
+			private function onAddedToStage(e:Event=null):void
+			{
+				removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);				
+				this.stage.addEventListener(Event.RESIZE, onResize);
+				setupComponents();
 			}
 			
 			private function setupComponents():void
 			{
-				myPoemRetriever = new PoemRetriever(settings);
-				myPoemRetriever.gotPoemFallback.add(onPoemFallback);
-				myPoemRetriever.gotPoemSignal.add(onPoemReceived);
+				Monster.info(this, "adding components to stage...");
 				
-				loop = new VideoLooper(settings.video.url, settings.video.width, settings.video.height, settings.video.xpos, settings.video.ypos, settings.video.loop);
-				this.stage.addChild(loop);
-				
-				bm = new BubbleManager(settings.timing);
-				this.stage.addChild(bm);
-				loadPoem(poemDate);
+				videoLooper = new VideoLooper(settings.videos);
+				this.stage.addChild(videoLooper);
 				
 				dateBug = new DateBug();
 				this.stage.addChild(dateBug);
 				
+				bm = new BubbleManager(settings.timing);
+				this.stage.addChild(bm);
+				
 				setupKeyboardManager();
 			}
 			
-			private function onReloadInterval(e:TimerEvent):void
+			private function onResize(e:Event):void
 			{
-				var nowDate:Date = new Date();
-				nowDay = nowDate.date;
-				if (!lastDay) { lastDay = nowDay; }
-				MonsterDebugger.trace(this, "nowDay: " + nowDay + ", lastDay: " + lastDay);
-				if (nowDay != lastDay)
-				{
-					loadPoem(nowDate);
-				}
-			
-			}
-			
-			private function loadPoem(date:Date):void
-			{
-				MonsterDebugger.trace(this, "Getting poem for " + date);
-				myPoemRetriever.getPoem(date);
-			}
-			
-			private function onPoemReceived(thePoem:String):void
-			{
-				dateBug.text = poemDate;
-				bm.poemText = thePoem;
-				bm.startShow();
-			}
-			
-			private function onPoemFallback(thePoem:String):void
-			{
-				MonsterDebugger.trace(this, ">>> poem fallback <<<", 0xff0000);
-				dateBug.showError(poemDate);
-				bm.poemText = thePoem;
-				bm.startShow();
+				if (videoLooper) { videoLooper.resize(); }
+				if (bm) { bm.resize(); }
+				if (dateBug) { dateBug.resize(); }
 			}
 			
 			/* *****************************************************************************
@@ -188,59 +207,74 @@
 			private function setupKeyboardManager():void
 			{
 				this.stage.addChild(KeyboardManager.getInstance());
-				KeyboardManager.getInstance().restartSignal.add(onRestartKey);
+//				KeyboardManager.getInstance().restartSignal.add(onRestartKey);
 				KeyboardManager.getInstance().loadSignal.add(onLoadKey);
 				KeyboardManager.getInstance().previousSignal.add(onPreviousKey);
 				KeyboardManager.getInstance().nextSignal.add(onNextKey);
 
 			}
 			
-			private function onRestartKey():void
-			{
-				MonsterDebugger.trace(this, "restarting show");
-				bm.showEnded.addOnce( function():void
-				{
-					bm.startShow();
-				});
-				bm.endShow();
-			}
+//			private function onRestartKey():void
+//			{
+//				Monster.info(this, "restarting show");
+//				bm.showEnded.addOnce( function():void
+//				{
+//					bm.startShow();
+//				});
+//				bm.endShow();
+//			}
+//			
+//			private function onLoadKey():void
+//			{
+//				Monster.info(this, "got load key");
+//				
+//				bm.showEnded.addOnce(function():void { loadPoem(poemDate); });
+//				bm.endShow();
+//			}
 			
 			private function onLoadKey():void
 			{
-				MonsterDebugger.trace(this, "got load key");
-				
-				bm.showEnded.addOnce(function():void { loadPoem(poemDate); });
-				bm.endShow();
+				dateChecker.sendTodayAgain();
 			}
 			
 			private function onNextKey():void
 			{
-				MonsterDebugger.trace(this, "got next key");
-				
-				bm.showEnded.addOnce
-				(
-					function():void
-					{
-						poemDate.date ++;
-						loadPoem(poemDate);
-					}
-				);
-				bm.endShow();
+				dateChecker.incrementFakeDate();
 			}
 			
 			private function onPreviousKey():void
 			{
-				MonsterDebugger.trace(this, "got previous key");
-				bm.showEnded.addOnce
-					(
-						function():void
-						{
-							poemDate.date --;
-							loadPoem(poemDate);
-						}
-					);
-				bm.endShow();
+				dateChecker.decrementFakeDate();
 			}
+//			
+//			private function onNextKey():void
+//			{
+//				Monster.info(this, "got next key");
+//				
+//				bm.showEnded.addOnce
+//				(
+//					function():void
+//					{
+//						poemDate.date ++;
+//						loadPoem(poemDate);
+//					}
+//				);
+//				bm.endShow();
+//			}
+//			
+//			private function onPreviousKey():void
+//			{
+//				Monster.info(this, "got previous key");
+//				bm.showEnded.addOnce
+//					(
+//						function():void
+//						{
+//							poemDate.date --;
+//							loadPoem(poemDate);
+//						}
+//					);
+//				bm.endShow();
+//			}
 			
 			// *****************************************************************************
 		]]>

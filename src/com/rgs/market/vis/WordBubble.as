@@ -1,4 +1,4 @@
-package com.rgs.market
+package com.rgs.market.vis
 {
 	import com.rgs.market.fonts.FontLibrary;
 	
