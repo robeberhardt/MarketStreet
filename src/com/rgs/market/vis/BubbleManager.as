@@ -29,6 +29,8 @@ package com.rgs.market.vis
 		private var rightField : TextField;
 		private var lineFormat : TextFormat;
 		
+		private var poemAuthor : String;
+		
 		private var _poemData : PoemData;
 		
 		private var chunksArray : Array;
@@ -50,6 +52,7 @@ package com.rgs.market.vis
 		private var currentChunkIndex : int;
 		private var numChunks : int;
 		
+		public var showInProgress : Boolean = false;
 		public var showEnded : Signal;
 				
 		public function BubbleManager(theSettings:XMLList)
@@ -103,6 +106,7 @@ package com.rgs.market.vis
 		{
 			currentChunkIndex = 0;
 			showNextChunk();
+			showInProgress = true;
 		}
 		
 		private function showNextChunk():void
@@ -119,7 +123,8 @@ package com.rgs.market.vis
 					box1.text = chunksArray[currentChunkIndex];
 					ticks = 1 + Number(timing.speed)*box1.text.length / 10;
 					
-					box1.x = stage.stageWidth * .5 + 50;
+//					box1.x = stage.stageWidth * .5 + 50;
+					box1.x = stage.stageWidth * .5 - 100;
 					box1.y = Math.random() * 100 + 50;
 					
 					if (currentChunkIndex < chunksArray.length-1)
@@ -191,6 +196,8 @@ package com.rgs.market.vis
 		
 		public function endShow():void
 		{
+			Monster.info(this, "ending show...");
+			showInProgress = false;
 			KeyboardManager.getInstance().enabled = false;
 			TweenMax.killAll();
 //			TweenMax.to(leftBubble, .5, { alpha: 0 });
@@ -231,8 +238,10 @@ package com.rgs.market.vis
 		public function set poemData(value:PoemData):void
 		{
 			_poemData = value;
-			Monster.info(this, _poemData.poem);
-			Monster.info(this, _poemData.author);
+			poemText = _poemData.poem;
+			poemAuthor = _poemData.author;
+//			Monster.info(this, _poemData.poem);
+//			Monster.info(this, _poemData.author);
 		}
 
 	}

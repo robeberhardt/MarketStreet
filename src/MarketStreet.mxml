@@ -127,6 +127,21 @@
 				Monster.info(this, poemData);
 //				bm.poemText = settings.poem.prefix.toString() + poemData.poem;
 				bm.poemData = poemData;
+				bm.startShow();
+				
+//				if (bm.showInProgress)
+//				{
+//					bm.showEnded.addOnce( function():void
+//					{
+//						bm.startShow();
+//					});
+//					bm.endShow();
+//				}
+//				else
+//				{
+//					bm.startShow();
+//				}
+				
 			}
 			
 			private function onDataError(errorData:ErrorData):void
@@ -141,7 +156,20 @@
 				Monster.info(this, "date changed: now = " + now);
 				dateBug.text = now;
 				videoLooper.load(now);
-				dataRetriever.getDataForLocalDate(now);
+//				dataRetriever.getDataForLocalDate(now);
+				
+				if (bm.showInProgress)
+				{
+					bm.showEnded.addOnce( function():void
+					{
+						dataRetriever.getDataForLocalDate(now);
+					});
+					bm.endShow();
+				}
+				else
+				{
+					dataRetriever.getDataForLocalDate(now);
+				}
 			}
 			
 			private function dateFromString(s:String):Date

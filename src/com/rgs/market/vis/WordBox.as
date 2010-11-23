@@ -50,7 +50,7 @@ package com.rgs.market.vis
 			field.multiline = true;
 			field.embedFonts = true;
 			field.selectable = false;
-			field.width = 500;
+			field.width = 650;
 			field.alpha = 1;
 			field.border = false;
 			field.borderColor = 0xFF0000;
@@ -65,7 +65,7 @@ package com.rgs.market.vis
 			lineTestField.multiline = true;
 			lineTestField.embedFonts = true;
 			lineTestField.selectable = false;
-			lineTestField.width = 500;
+			lineTestField.width = 650;
 			lineTestField.alpha = 1;
 			lineTestField.border = false;
 			lineTestField.borderColor = 0xFF0000;

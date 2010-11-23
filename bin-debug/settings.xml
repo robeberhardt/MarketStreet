@@ -21,19 +21,19 @@
 		<video id="sunday" xpos="0" ypos="0">
 			<url>assets/neon2_small.flv</url>
 		</video>
-		<video id="monday" xpos="-300" ypos="0">
+		<video id="monday" xpos="-200" ypos="0">
 			<url>assets/legs.flv</url>
 		</video>
 		<video id="tuesday" xpos="0" ypos="0">
 			<url>assets/neon2_small.flv</url>
 		</video>
-		<video id="wednesday" xpos="-200" ypos="0">
+		<video id="wednesday" xpos="0" ypos="0">
 			<url>assets/legs.flv</url>
 		</video>
 		<video id="thursday" xpos="0" ypos="0">
 			<url>assets/neon2_small.flv</url>
 		</video>
-		<video id="friday" xpos="-100" ypos="0">
+		<video id="friday" xpos="0" ypos="0">
 			<url>assets/legs.flv</url>
 		</video>
 		<video id="saturday" xpos="0" ypos="0">
