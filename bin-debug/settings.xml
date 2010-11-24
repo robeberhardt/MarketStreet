@@ -3,9 +3,9 @@
 		<username>marketstreetproject@gmail.com</username>
 		<password>artery321</password>
 		<calendarName>projection</calendarName>
-		<remoteSettingsDate>11/14/2010</remoteSettingsDate>
+		<remoteSettingsDate>11/23/2010</remoteSettingsDate>
 		<prefix><![CDATA[>  ]]></prefix>
-		<suffix><![CDATA[ :::]]></suffix>
+		<suffix><![CDATA[  <]]></suffix>
 		<startDate>today</startDate>
 		<dateCheckInterval>60</dateCheckInterval>
 	</data>
@@ -28,7 +28,7 @@
 		</video>
 		<video id="thursday" xpos="0" ypos="0">
 			<url>assets/neon2_small.flv</url>
-		</video>
+		</video>s
 		<video id="friday" xpos="0" ypos="0">
 			<url>assets/legs.flv</url>
 		</video>

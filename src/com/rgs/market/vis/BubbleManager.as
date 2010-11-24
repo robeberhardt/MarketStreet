@@ -69,6 +69,10 @@ package com.rgs.market.vis
 		private function init(e:Event=null):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
+//			graphics.beginFill(0xFF0000, 1);
+//			graphics.drawRect(0, 0, 50, 50);
+//			graphics.endFill();
 									
 			box1 = new WordBox( { x:stage.stageWidth * .5 - 50, y:30, 
 				offsetX:-50, offsetY:0,  maxWidth:Number(boxesSettings.maxWidth), maxHeight:Number(boxesSettings.maxHeight), cornerRadius:20,
@@ -126,8 +130,18 @@ package com.rgs.market.vis
 					ticks = 1 + Number(timingSettings.speed)*box1.text.length / 10;
 					
 //					box1.x = stage.stageWidth * .5 + 50;
-					box1.x = stage.stageWidth * .5 - 100;
-					box1.y = Math.random() * 100 + 50;
+//					box1.x = stage.stageWidth * .5 - 100;
+//					box1.x = stage.stageWidth - 100 - box1.width;
+					
+					box1.x = (stage.stageWidth - (box1.width * scaleX) - (50 + (Math.random()*100) * scaleX)) / scaleX;
+					box1.y = (Math.random() * 50 + 25) * scaleY;
+					
+//					box1.y = Math.random() * 100 + 50;
+					
+					Monster.warning(this, box1.x + " : " + box1.y);
+					Monster.warning(this, box1.width + " : " + box1.height);
+					Monster.warning(this, stage.stageWidth + ", " + stage.stageHeight);
+					Monster.warning(this, "scaleX: " + scaleX + ", scaleY: " + scaleY);
 					
 					if (currentChunkIndex < chunksArray.length-1)
 					{
@@ -148,17 +162,22 @@ package com.rgs.market.vis
 				box2.text = chunksArray[currentChunkIndex];
 				ticks = 1 + Number(timingSettings.speed)*box2.text.length / 10;
 				
+				box2.x = (stage.stageWidth - (box2.width * scaleX) - (50 + (Math.random()*100) * scaleX)) / scaleX;
+				box2.y = box1.y + box1.height + 30 + (Math.random()*30) * scaleY;
+				
+				/*
 				if (Math.random() < .5)
 				{
-					box2.x = box1.x - 50;
+					//box2.x = box1.x - 50;
 				}
 				else
 				{
-					box2.x = box1.x + 50;
+					//box2.x = box1.x + 50;
 				}
 				
+				box2.x = box1.x;
 				box2.y = box1.y + box1.height + 30 + (Math.random()*30);
-				
+				*/
 				
 				if (currentChunkIndex < chunksArray.length-1)
 				{
@@ -230,6 +249,12 @@ package com.rgs.market.vis
 		{
 			scaleX = stage.stageWidth / 1280;
 			scaleY = stage.stageHeight / 800;
+//			Monster.info(this, "width: " + box1.width);
+//			Monster.info(this, "scale: " + box1.scaleX);
+			
+//			box1.x = (stage.stageWidth - (box1.width * scaleX)) / scaleX;
+//			box2.x = box1.x;
+//			Monster.warning(this,box1.x);
 		}
 
 		public function get poemData():PoemData

@@ -131,7 +131,7 @@
 				Monster.info(this, poemData);
 				videoLooper.load(dateChecker.nowDate);
 				bm.poemData = poemData;
-				authorBug.text = poemData.title + "  -  " + poemData.author;
+//				authorBug.text = poemData.title + "  -  " + poemData.author;
 				bm.startShow();
 				dateBug.show();	
 			}
@@ -140,6 +140,7 @@
 			{
 				Monster.error(this, "ERRORRRRR");
 				Monster.error(this, errorData);
+				videoLooper.load(dateChecker.nowDate);
 				bm.poemData = fallbackPoem;
 				bm.startShow();
 			}
@@ -208,8 +209,8 @@
 				dateBug = new DateBug();
 				this.stage.addChild(dateBug);
 				
-				authorBug = new AuthorBug();
-				this.stage.addChild(authorBug);
+				//authorBug = new AuthorBug();
+				//this.stage.addChild(authorBug);
 				
 				
 				bm = new BubbleManager(settings);
