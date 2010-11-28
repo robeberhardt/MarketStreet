@@ -16,8 +16,8 @@ package com.rgs.market.fonts
 		[Embed(source="../../../../../assets/fonts/FuturaStd-Bold.otf", fontName="Futura Bold", fontWeight = "bold", mimeType="application/x-font-opentype")]
 		private static var FuturaBold : Class;
 		
-		[Embed(source="../../../../../assets/fonts/acmesa.ttf", fontName="A.C.M.E. Secret Agent", fontWeight = "normal", mimeType="application/x-font-truetype")]
-		private static var ACMESecretAgent : Class;
+//		[Embed(source="../../../../../assets/fonts/acmesa.ttf", fontName="A.C.M.E. Secret Agent", fontWeight = "normal", mimeType="application/x-font-truetype")]
+//		private static var ACMESecretAgent : Class;
 		
 		[Embed(source="../../../../../assets/fonts/acmesa-new.ttf", fontName="A.C.M.E. Secret Agent Bold", fontWeight = "bold", mimeType="application/x-font-truetype")]
 		private static var ACMESecretAgentBold : Class;

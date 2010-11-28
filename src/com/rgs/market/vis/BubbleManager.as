@@ -1,3 +1,4 @@
+
 package com.rgs.market.vis
 {
 	import com.greensock.TweenMax;
@@ -75,12 +76,12 @@ package com.rgs.market.vis
 //			graphics.endFill();
 									
 			box1 = new WordBox( { x:stage.stageWidth * .5 - 50, y:30, 
-				offsetX:-50, offsetY:0,  maxWidth:Number(boxesSettings.maxWidth), maxHeight:Number(boxesSettings.maxHeight), cornerRadius:20,
-				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
+				offsetX:-50, offsetY:0,  maxWidth:Number(boxesSettings.maxWidth), maxHeight:Number(boxesSettings.maxHeight), cornerRadius:Number(boxesSettings.cornerRadius),
+				strokeWidth:Number(boxesSettings.strokeWidth), strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
 			
 			box2 = new WordBox( { x:stage.stageWidth * .5 + 50, y:30, 
-				offsetX:50, offsetY:0, maxWidth:Number(boxesSettings.maxWidth), maxHeight:Number(boxesSettings.maxHeight), cornerRadius:20,
-				strokeWidth:2, strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
+				offsetX:50, offsetY:0, maxWidth:Number(boxesSettings.maxWidth), maxHeight:Number(boxesSettings.maxHeight), cornerRadius:Number(boxesSettings.cornerRadius),
+				strokeWidth:Number(boxesSettings.strokeWidth), strokeColor:0xffffff, fillColor:0x000000, fillAlpha: 1, neck:2	} );
 			
 			addChild(box1);
 			addChild(box2);

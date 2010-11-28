@@ -55,6 +55,25 @@ package com.rgs.market.vis
 			draw();
 		}
 		
+//		public function draw():void
+//		{
+//			with (this.graphics) 
+//			{
+//				clear();
+//				lineStyle(_strokeWidth, _strokeColor, _strokeAlpha);
+//				beginFill(_fillColor, _fillAlpha);
+//				
+//				moveTo(0, 0);
+//				lineTo(_width, 0);
+//				lineTo(_width, _height);
+//				lineTo(0, _height);
+//				lineTo(0, 0);
+//				endFill();
+//
+//			}
+//			postDraw();
+//		}
+		
 		public function draw():void
 		{
 			with (this.graphics) 
@@ -63,13 +82,9 @@ package com.rgs.market.vis
 				lineStyle(_strokeWidth, _strokeColor, _strokeAlpha);
 				beginFill(_fillColor, _fillAlpha);
 				
-				moveTo(0, 0);
-				lineTo(_width, 0);
-				lineTo(_width, _height);
-				lineTo(0, _height);
-				lineTo(0, 0);
+				drawRoundRect(0, 0, _width, _height, _cornerRadius, _cornerRadius);
 				endFill();
-
+				
 			}
 			postDraw();
 		}

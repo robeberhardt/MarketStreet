@@ -3,6 +3,7 @@ package com.rgs.market.vis
 	import com.gskinner.StringUtils;
 	import com.rgs.market.fonts.FontLibrary;
 	
+	import flash.display.BlendMode;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.text.AntiAliasType;
@@ -72,7 +73,7 @@ package com.rgs.market.vis
 			lineTestField.background = false;
 			lineTestField.backgroundColor = 0x000000;
 			
-			triangle = new Triangle( { width:30, height:15, strokeWidth: 0, strokeColor: 0xffffff, fillColor:0xffffff, fillAlpha: 1 } );
+			triangle = new Triangle( { width:30, height:15, strokeWidth: 2, strokeColor: 0xffffff, fillColor:0xffffff, fillAlpha: 1 } );
 			addChild(triangle);
 		
 		}
@@ -135,8 +136,8 @@ package com.rgs.market.vis
 			width = field.textWidth+ 24;
 			height = field.textHeight + 14;
 			draw();
-			triangle.x = 50 + (Math.random()*(width-100));
-			triangle.y = height;
+			triangle.x = Math.round(50 + (Math.random()*(width-100)));
+			triangle.y = Math.round(height + strokeWidth - 3);
 		}
 		
 		public function showTriangle():void

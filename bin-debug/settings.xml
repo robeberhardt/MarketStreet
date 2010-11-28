@@ -12,6 +12,8 @@
 	<boxes>
 		<maxWidth>650</maxWidth>
 		<maxHeight>180</maxHeight>
+		<strokeWidth>6</strokeWidth>
+		<cornerRadius>10</cornerRadius>
 	</boxes>
 	<videos>
 		<video id="sunday" xpos="0" ypos="0">
